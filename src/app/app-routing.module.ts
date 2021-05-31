@@ -1,10 +1,14 @@
-import { NgModule } from '@angular/core';
+import {Input, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent }
+  { path: '', component: HomeComponent },
+  { path: 'zones', component: HomeComponent },
+  { path: 'my-zones', component: HomeComponent },
+  { path: 'my-events', component: HomeComponent },
+  { path: 'my-space', component: HomeComponent }
 ];
 
 @NgModule({
@@ -15,4 +19,7 @@ const routes: Routes = [
   exports: [ RouterModule ],
   declarations: []
 })
-export class AppRoutingModule { }
+
+export class AppRoutingModule {
+  @Input() token: string;
+}

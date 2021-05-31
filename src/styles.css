@@ -24,3 +24,44 @@
   color: #474545;
   font-weight: bold;
 }
+
+.icon {
+  width: 35px;
+  float: left;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.home-date {
+  font-weight: bold;
+}
+
+.event-picture {
+  float: left;
+  height: 180px;
+  margin-right: 15px;
+}
+
+.home-menu {
+  background-color: #7CCA6C;
+}
+
+.menu-item {
+  font-size: 12px;
+}
+
+.action-button {
+  width: 75px !important;
+  height: 75px !important;
+  font-size: 10px;
+  margin: 10px;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

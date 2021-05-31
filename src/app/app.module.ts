@@ -7,17 +7,26 @@ import {HttpModule} from '@angular/http';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
-import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {HomeComponent} from './components/home/home.component';
 import {NgxLoadingModule} from 'ngx-loading';
 import {NgModule} from "@angular/core";
 import {ButtonModule} from "primeng/button";
+import { MenuComponent } from './components/menu/menu.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatMenuModule} from "@angular/material/menu";
+import {MatIconModule} from "@angular/material/icon";
+import {MenubarModule} from "primeng/menubar";
+import {CardModule} from "primeng/card";
+import { ActionButtonsComponent } from './components/action-buttons/action-buttons.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    DashboardComponent
+    HomeComponent,
+    MenuComponent,
+    ActionButtonsComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +35,12 @@ import {ButtonModule} from "primeng/button";
     HttpModule,
     ReactiveFormsModule,
     NgxLoadingModule.forRoot({}),
-    ButtonModule
+    ButtonModule,
+    BrowserAnimationsModule,
+    MatMenuModule,
+    MatIconModule,
+    MenubarModule,
+    CardModule
 
   ],
   providers: [HttpClient],

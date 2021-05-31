@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="col-md-6 col-sm-6 ml-auto mr-auto margin-tp">
+
+    <h2>Home</h2>
+
+    <div *ngIf="events.length === 0" style="text-align: center"><p>Il n'y a aucun événement à venir.</p></div>
+    <div *ngFor="let event of events">
+      <p-card header="CleanWalk {{event.eventTitle}} à {{event.zone.zoneCity.toUpperCase()}}"
+              subheader="Détritus à {{event.zone.zoneCity}}, il faut faire quelque chose !" [style]="{width: '700px'}"
+              styleClass="p-card-shadow">
+        <img alt="{{event.eventTitle}} image" src="assets/pictures/{{event.picture.mediaPath}}" class="event-picture">
+        <div>
+          <img src="assets/map-marker-alt-solid.svg" alt="" class="icon"/>
+          <p style="font-weight: bold">{{event.zone.zoneStreet}} <br/>{{event.zone.zoneCity}} {{event.zone.zoneZipcode}}
+          </p>
+        </div>
+        <p style="font-size: 12px;">Du <span class="home-date">{{event.dateHourStart.toStringDate()}}</span><br/>
+          Jusqu'au <span class="home-date">{{event.dateHourEnd.toStringDate()}}</span></p>
+        <div style="text-align: right" *ngIf="event.eventRemainingPlaces">
+          <span style="font-weight: bold">{{event.eventRemainingPlaces}}</span> places restantes
+        </div>
+        <ng-template pTemplate="footer">
+          <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"></p-button>
+          <p-button label="Participer" icon="pi pi-check" styleClass="p-button-success"
+                    [style]="{'margin-left': '.5em'}"></p-button>
+        </ng-template>
+      </p-card>
+      <br/>
+    </div>
+
+  </div>
+  <app-action-buttons [token]="token"></app-action-buttons>
+</div>
