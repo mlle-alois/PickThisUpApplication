@@ -16,6 +16,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this.initToken();
+    this.initCurrentUser();
   }
 
   ngAfterViewInit() {
@@ -33,6 +34,12 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
     else {
       this.token = this.authenticatedUserService.getToken();
+    }
+  }
+
+  async initCurrentUser() {
+    if (!await this.authenticatedUserService.isCurrentUserLoaded()) {
+      await this.authenticatedUserService.loadCurrentUser();
     }
   }
 }

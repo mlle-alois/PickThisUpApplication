@@ -14,12 +14,6 @@ export class HttpService {
               private httpClient: HttpClient) {
   }
 
-  getAuthorizationHeaders() {
-    return new HttpHeaders()
-      .set('Authorization', `Bearer ${this.authenticatedUserService.getToken()}`)
-      .set('content-type', 'application/json');
-  }
-
   get<T>(url: string): Promise<T | undefined> {
     return new Promise((resolve, reject) =>
       this.httpClient.get(url, {
@@ -33,11 +27,11 @@ export class HttpService {
         .subscribe(
           (data) => {
             if (data.status === 204) {
-              resolve(undefined);
-            } else if (data.body && data.body[`response_code`] === 0) {
-              resolve(data.body[`result`]);
+              resolve;
+            } else if (data.body) {
+              resolve(data.body as T);
             } else {
-              reject(data.body ? data.body[`result`] : '');
+              reject;
             }
           },
           (error) => {
@@ -71,11 +65,10 @@ export class HttpService {
               })
               resolve(res);
             } else {
-              reject(data.body ? data.body : []);
+              reject([]);
             }
           },
           (error) => {
-            console.log(error)
             if (error.status === 401 || error.status === 403) {
               this.authenticatedUserService.redirectToAuthentication();
             } else {

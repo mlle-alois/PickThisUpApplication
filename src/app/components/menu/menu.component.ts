@@ -30,10 +30,7 @@ export class MenuComponent implements OnInit {
         label: 'Signalements',
         icon: 'pi pi-fw pi-exclamation-triangle',
         styleClass: 'menu-item',
-        command: () => {
-          console.log('zones')
-          this.router.navigate(['zones'])
-        }
+        command: () => this.router.navigate(['zones'])
       },
       {
         label: 'Mes signalements',

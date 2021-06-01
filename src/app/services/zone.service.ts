@@ -17,23 +17,5 @@ export class ZoneService {
               private queriesService: HttpService) {
   }
 
-  //TODO vérifier que ça marche
-  getZoneById(zoneId: number): Promise<ZoneModel> {
-    return new Promise((resolve, reject) =>
-      this.httpClient.get(config.URL + "/zone/get/" + zoneId, {
-        headers: this.queriesService.getAuthorizationHeaders()
-      })
-        .pipe(catchError(err => {
-          if (err.status === 403) {
-            this.authenticatedUserService.redirectToAuthentication();
-          }
-          reject(err);
-          return throwError(err);
-        }))
-        .subscribe((result) => {
-          const jsondata: any = result;
-          resolve(new ZoneModel(jsondata));
-        }));
-  }
 
 }
