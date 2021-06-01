@@ -75,6 +75,7 @@ export class HttpService {
             }
           },
           (error) => {
+            console.log(error)
             if (error.status === 401 || error.status === 403) {
               this.authenticatedUserService.redirectToAuthentication();
             } else {

@@ -18,6 +18,10 @@ import {MatIconModule} from "@angular/material/icon";
 import {MenubarModule} from "primeng/menubar";
 import {CardModule} from "primeng/card";
 import { ActionButtonsComponent } from './components/action-buttons/action-buttons.component';
+import { MySpaceComponent } from './components/my-space/my-space.component';
+import { MyEventsComponent } from './components/my-events/my-events.component';
+import { MyZonesComponent } from './components/my-zones/my-zones.component';
+import { ZonesComponent } from './components/zones/zones.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,11 @@ import { ActionButtonsComponent } from './components/action-buttons/action-butto
     FooterComponent,
     HomeComponent,
     MenuComponent,
-    ActionButtonsComponent
+    ActionButtonsComponent,
+    MySpaceComponent,
+    MyEventsComponent,
+    MyZonesComponent,
+    ZonesComponent
   ],
   imports: [
     BrowserModule,

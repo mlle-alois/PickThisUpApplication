@@ -32,11 +32,6 @@ export class AuthenticatedUserService {
     this.logout();
   }
 
-  public redirectToAccessDeniedScreen(): void {
-    // this.router.navigate(['/', 'access-denied']);
-    // TODO
-  }
-
   public logout(): void {
     if (this.getToken())
       this.removeToken();

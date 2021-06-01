@@ -24,31 +24,34 @@ export class MenuComponent implements OnInit {
         label: 'Home',
         icon: 'pi pi-fw pi-home',
         styleClass: 'home-menu menu-item',
-        command: () => this.router.navigateByUrl('')
+        command: () => this.router.navigate([''])
       },
       {
         label: 'Signalements',
         icon: 'pi pi-fw pi-exclamation-triangle',
         styleClass: 'menu-item',
-        command: () => this.router.navigateByUrl('zones')
+        command: () => {
+          console.log('zones')
+          this.router.navigate(['zones'])
+        }
       },
       {
         label: 'Mes signalements',
         icon: 'pi pi-fw pi-exclamation-triangle',
         styleClass: 'menu-item',
-        command: () => this.router.navigateByUrl('my-zones')
+        command: () => this.router.navigate(['my-zones'])
       },
       {
         label: 'Mes événements',
         icon: 'pi pi-fw pi-flag',
         styleClass: 'menu-item',
-        command: () => this.router.navigateByUrl('my-events')
+        command: () => this.router.navigate(['my-events'])
       },
       {
         label: 'Mon espace',
         icon: 'pi pi-fw pi-user',
         styleClass: 'menu-item',
-        command: () => this.router.navigateByUrl('my-space')
+        command: () => this.router.navigate(['my-space'])
       }
     ];
   }

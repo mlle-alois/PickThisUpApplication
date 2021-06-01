@@ -2,13 +2,17 @@ import {Input, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
+import {ZonesComponent} from "./components/zones/zones.component";
+import {MyZonesComponent} from "./components/my-zones/my-zones.component";
+import {MyEventsComponent} from "./components/my-events/my-events.component";
+import {MySpaceComponent} from "./components/my-space/my-space.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'zones', component: HomeComponent },
-  { path: 'my-zones', component: HomeComponent },
-  { path: 'my-events', component: HomeComponent },
-  { path: 'my-space', component: HomeComponent }
+  { path: 'zones', component: ZonesComponent },
+  { path: 'my-zones', component: MyZonesComponent },
+  { path: 'my-events', component: MyEventsComponent },
+  { path: 'my-space', component: MySpaceComponent }
 ];
 
 @NgModule({
