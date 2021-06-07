@@ -14,9 +14,9 @@ export class AppComponent implements AfterViewInit, OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private authenticatedUserService: AuthenticatedUserService) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initToken();
-    this.initCurrentUser();
+    await this.initCurrentUser();
   }
 
   ngAfterViewInit() {

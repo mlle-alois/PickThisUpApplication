@@ -5,6 +5,8 @@ import {AuthenticatedUserService} from "./authenticated-user.service";
 import {HttpService} from "./http.service";
 import {EventModel} from "../models/event.model";
 import {MyDate} from "../utils/MyDate";
+import {UserModel} from "../models/user.model";
+import {MediaModel} from "../models/media.model";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,10 @@ export class EventService {
         event.dateHourCreation = new MyDate(event.dateHourCreation);
         return event;
     });
+  }
+
+  async getParticipantsEvents(eventId: number): Promise<UserModel[]> {
+    return (await this.httpService.getAll<UserModel>(config.URL + "/event/getParticipants/" + eventId));
   }
 
 }
