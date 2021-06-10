@@ -10,9 +10,12 @@ import {AuthenticatedUserService} from "../../services/authenticated-user.servic
 
 export class ActionButtonsComponent implements OnInit {
 
+  BLOCKED_USER_USER_TYPE_ID = 4;
+
   @Input() token: string;
   currentUser: UserModel;
-  BLOCKED_USER_USER_TYPE_ID = 4;
+  isAddEventClicked = false;
+  isSignalZoneClicked = false;
 
   constructor(private authenticatedUserService: AuthenticatedUserService) {
   }
@@ -28,6 +31,16 @@ export class ActionButtonsComponent implements OnInit {
     } else {
       this.currentUser = await this.authenticatedUserService.getCurrentUser();
     }
+  }
+
+  onIsAddEventClicked() {
+    this.isSignalZoneClicked = false;
+    this.isAddEventClicked = true;
+  }
+
+  onIsSignalZoneClicked() {
+    this.isSignalZoneClicked = true;
+    this.isAddEventClicked = false;
   }
 
 }

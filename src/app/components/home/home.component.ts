@@ -33,6 +33,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
   currentUserParticipateToCarpools: Map<number, boolean>;
   currentUserParticipateToCarpool = false;
 
+  isCarpoolDetailVisible = false;
+  visibleCarpool: CarpoolModel;
+
   eventPictures: MediaModel[];
 
   responsiveOptions: any[] = [
@@ -58,12 +61,15 @@ export class HomeComponent implements AfterViewInit, OnInit {
               private zoneService: ZoneService) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initToken();
+    await this.initCurrentUser();
+    if(this.currentUser === undefined) {
+      window.location.reload();
+    }
   }
 
   async ngAfterViewInit() {
-    await this.initCurrentUser();
     if (!this.authenticatedUserService.isAuthenticated()) {
       this.authenticatedUserService.redirectToAuthentication();
     }
@@ -87,17 +93,12 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.eventCarpools = await this.getCarpoolsOfEvent(event);
     this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
     this.eventPictures = await this.getPicturesOfEvent(event);
-      [new MediaModel({mediaId: 0, mediaPath: "clean-2_web.jpg"}),
-      new MediaModel({mediaId: 0, mediaPath: "pickThisUpLogo.PNG"})]
   }
 
-  async onCarpoolDetailClicked(event: EventModel): Promise<void> {
-    //TODO
-    /*this.isEventDetailVisible = true;
-    this.visibleEvent = event;
-    this.eventParticipants = await this.getParticipantsOfEvent(event);
-    this.eventCarpools = await  this.getCarpoolsOfEvent(event);
-    this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);*/
+  async onCarpoolDetailClicked(carpool: CarpoolModel): Promise<void> {
+    this.isCarpoolDetailVisible = true;
+    this.visibleCarpool = carpool;
+    this.carpoolParticipants = await this.getParticipantsOfCarpool(carpool);
   }
 
   getParticipantsOfEvent(event: EventModel): Promise<UserModel[]> {
@@ -128,15 +129,44 @@ export class HomeComponent implements AfterViewInit, OnInit {
       });
   }
 
+  async participateToEvent(event: EventModel) {
+    //TODO traitement de création de covoiturage (popup etc...)
+    this.eventParticipants = await this.eventService.registerToEvent(event.eventId);
+    this.events = await this.eventService.getAvailableEvents();
+    this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
+    this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
+  }
+
+  async unsubscribeToEvent(event: EventModel) {
+    this.eventParticipants = await this.eventService.unregisterToEvent(event.eventId);
+    this.events = await this.eventService.getAvailableEvents();
+    this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
+    this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
+  }
+
+  async participateToCarpool(carpool: CarpoolModel) {
+    this.carpoolParticipants = await this.carpoolService.registerToCarpool(carpool.carpoolId);
+    this.eventCarpools = await this.getCarpoolsOfEvent(this.visibleEvent);
+    this.visibleCarpool = this.eventCarpools.find(event => event.carpoolId === carpool.carpoolId);
+    this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
+  }
+
+  async unsubscribeToCarpool(carpool: CarpoolModel) {
+    this.carpoolParticipants = await this.carpoolService.unregisterToCarpool(carpool.carpoolId);
+    this.eventCarpools = await this.getCarpoolsOfEvent(this.visibleEvent);
+    this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
+    this.visibleCarpool = this.eventCarpools.find(event => event.carpoolId === carpool.carpoolId);
+    this.currentUserParticipateToCarpool = false;
+  }
+
   //TODO vérifier que c'est faisable avec des fonctions de js
   async setCurrentUserParticipateToEvents(events: EventModel[]): Promise<Map<number, boolean>> {
     const currentUserParticipateToEvent = new Map();
-    const currentUser = await this.authenticatedUserService.getCurrentUser();
     for (let i = 0; i < events.length; i += 1) {
       const participants = await this.getParticipantsOfEvent(events[i]);
       let j;
       for (j = 0; j < participants.length; j += 1) {
-        if (participants[j].mail === currentUser.mail) {
+        if (participants[j].mail === this.currentUser.mail) {
           break;
         }
       }
@@ -152,19 +182,19 @@ export class HomeComponent implements AfterViewInit, OnInit {
   //TODO vérifier que c'est faisable avec des fonctions de js
   async setCurrentUserParticipateToCarpools(carpools: CarpoolModel[]): Promise<Map<number, boolean>> {
     const currentUserParticipateToCarpools = new Map();
-    const currentUser = await this.authenticatedUserService.getCurrentUser();
     for (let i = 0; i < carpools.length; i += 1) {
       const participants = await this.getParticipantsOfCarpool(carpools[i]);
       let j;
       for (j = 0; j < participants.length; j += 1) {
-        if (participants[j].mail === currentUser.mail) {
-          if (j < participants.length) {
-            currentUserParticipateToCarpools.set(carpools[i].eventId, true);
-            this.currentUserParticipateToCarpool = true;
-          } else {
-            currentUserParticipateToCarpools.set(carpools[i].eventId, false);
-          }
+        if (participants[j].mail === this.currentUser.mail) {
+          break;
         }
+      }
+      if (j < participants.length) {
+        currentUserParticipateToCarpools.set(carpools[i].carpoolId, true);
+        this.currentUserParticipateToCarpool = true;
+      } else {
+        currentUserParticipateToCarpools.set(carpools[i].carpoolId, false);
       }
     }
     return currentUserParticipateToCarpools;

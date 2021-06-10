@@ -1,3 +1,5 @@
+import {UserModel} from "./user.model";
+
 export interface ICarpoolProps {
   carpoolId: number;
   carpoolDepartureStreet: string;
@@ -7,6 +9,7 @@ export interface ICarpoolProps {
   carpoolRemainingPlaces?: number;
   eventId: number;
   conductorId: string;
+  conductor?: UserModel;
 }
 
 export class CarpoolModel implements ICarpoolProps {
@@ -18,6 +21,7 @@ export class CarpoolModel implements ICarpoolProps {
   carpoolRemainingPlaces?: number;
   eventId: number;
   conductorId: string;
+  conductor?: UserModel;
 
   constructor(properties: ICarpoolProps) {
     this.carpoolId = properties.carpoolId;
@@ -28,5 +32,6 @@ export class CarpoolModel implements ICarpoolProps {
     this.carpoolRemainingPlaces = properties.carpoolRemainingPlaces;
     this.eventId = properties.eventId;
     this.conductorId = properties.conductorId;
+    this.conductor = properties.conductor;
   }
 }

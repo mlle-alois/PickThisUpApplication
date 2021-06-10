@@ -28,12 +28,12 @@
             <p-button
               *ngIf="event.dateHourStart > currentTimestamp && event.eventRemainingPlaces > 0 &&
               !currentUserParticipateToEvents.get(event.eventId) && currentUser.mail !== event.creatorId"
-              label="Participer"
+              label="Participer" (onClick)="participateToEvent(event)"
               icon="pi pi-check" styleClass="p-button-success"
               [style]="{'margin-left': '.5em'}"></p-button>
             <p-button
               *ngIf="event.dateHourStart > currentTimestamp && currentUserParticipateToEvents.get(event.eventId)"
-              label="Se désinscrire"
+              label="Se désinscrire" (onClick)="unsubscribeToEvent(event)"
               icon="pi pi-check" styleClass="p-button-danger"
               [style]="{'margin-left': '.5em'}"></p-button>
           </div>
@@ -47,7 +47,7 @@
 </div>
 <!-- endregion-->
 
-<!-- region Détails-->
+<!-- region Détails Event-->
 <p-dialog *ngIf="visibleEvent" [(visible)]="isEventDetailVisible"
           header="Détails de l'événement {{visibleEvent.eventTitle}}"
           [style]="{width: '60vw'}">
@@ -73,11 +73,9 @@
           <span class="bold-text">{{visibleEvent.eventRemainingPlaces}}</span> places restantes
         </div>
 
+        <h3>Participants</h3>
         <p-table [value]="eventParticipants">
           <ng-template pTemplate="body" let-participant>
-            <tr>
-              <th><h3>Participants</h3></th>
-            </tr>
             <tr>
               <td>{{participant.firstname}} {{participant.name}}
                 - {{participant.mail}}</td>
@@ -107,11 +105,9 @@
              style="width: 40%;padding-left: 3%">
       </div>
     </div>
+    <h3>Covoiturages</h3>
     <p-table [value]="eventCarpools">
       <ng-template pTemplate="body" let-carpool>
-        <tr>
-          <th><h3>Covoiturages</h3></th>
-        </tr>
         <tr>
           <td>Départ :
             <span
@@ -124,13 +120,13 @@
               <p-button
                 *ngIf="visibleEvent.dateHourStart > currentTimestamp && carpool.carpoolRemainingPlaces > 0 &&
               !currentUserParticipateToCarpools.get(carpool.carpoolId) && !currentUserParticipateToCarpool &&
-              currentUser.mail !== carpool.conductorId"
-                label="Participer au covoiturage"
+              currentUser.mail !== carpool.conductorId && currentUserParticipateToEvents.get(visibleEvent.eventId)"
+                label="Participer au covoiturage" (onClick)="participateToCarpool(carpool)"
                 icon="pi pi-check" styleClass="p-button-success"
                 [style]="{'margin-left': '.5em'}"></p-button>
               <p-button
                 *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToCarpools.get(carpool.carpoolId)"
-                label="Se désinscrire du covoiturage"
+                label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpool(carpool)"
                 icon="pi pi-check" styleClass="p-button-danger"
                 [style]="{'margin-left': '.5em'}"></p-button>
             </div>
@@ -143,12 +139,59 @@
     <p-button
       *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleEvent.eventRemainingPlaces > 0 &&
       !currentUserParticipateToEvents.get(visibleEvent.eventId) && currentUser.mail !== visibleEvent.creatorId"
-      label="Participer à l'événement"
+      label="Participer à l'événement" (onClick)="participateToEvent(visibleEvent)"
       icon="pi pi-check" styleClass="p-button-success"
       [style]="{'margin-left': '.5em'}"></p-button>
     <p-button
       *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToEvents.get(visibleEvent.eventId)"
-      label="Se désinscrire de l'événement"
+      label="Se désinscrire de l'événement" (onClick)="unsubscribeToEvent(visibleEvent)"
+      icon="pi pi-check" styleClass="p-button-danger"
+      [style]="{'margin-left': '.5em'}"></p-button>
+  </ng-template>
+</p-dialog>
+<!-- endregion-->
+
+<!-- region Détails Carpool-->
+<p-dialog *ngIf="visibleCarpool" [(visible)]="isCarpoolDetailVisible"
+          header="Détails du covoiturage de {{visibleCarpool.conductorId}}"
+          [style]="{width: '40vw'}">
+  <div>
+    <h2>Adresse de départ</h2>
+    <div>
+      <img src="assets/map-marker-alt-solid.svg" alt="" class="icon"/>
+      <p class="bold-text">
+        {{visibleCarpool.carpoolDepartureStreet}}<br/>
+        {{visibleCarpool.carpoolDepartureCity}} {{visibleCarpool.carpoolDepartureZipcode}}<br/>
+      </p>
+    </div>
+    <p>Conducteur : <span class="bold-text">{{visibleCarpool.conductor.firstname}} {{visibleCarpool.conductor.name}} :
+      {{visibleCarpool.conductorId}}, {{visibleCarpool.conductor.phoneNumber}}</span></p>
+    <div style="text-align: right"
+         *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleCarpool.carpoolRemainingPlaces > 0">
+      <span class="bold-text">{{visibleCarpool.carpoolRemainingPlaces}}</span> places restantes
+    </div>
+
+    <h3>Participants</h3>
+    <p-table [value]="carpoolParticipants">
+      <ng-template pTemplate="body" let-participant>
+        <tr>
+          <td>{{participant.firstname}} {{participant.name}}
+            - {{participant.mail}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button
+      *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleCarpool.carpoolRemainingPlaces > 0 &&
+              !currentUserParticipateToCarpools.get(visibleCarpool.carpoolId) && !currentUserParticipateToCarpool &&
+              currentUser.mail !== visibleCarpool.conductorId && currentUserParticipateToEvents.get(visibleEvent.eventId)"
+      label="Participer au covoiturage" (onClick)="participateToCarpool(visibleCarpool)"
+      icon="pi pi-check" styleClass="p-button-success"
+      [style]="{'margin-left': '.5em'}"></p-button>
+    <p-button
+      *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToCarpools.get(visibleCarpool.carpoolId)"
+      label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpool(visibleCarpool)"
       icon="pi pi-check" styleClass="p-button-danger"
       [style]="{'margin-left': '.5em'}"></p-button>
   </ng-template>

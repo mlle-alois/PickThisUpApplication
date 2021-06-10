@@ -24,4 +24,12 @@ export class CarpoolService {
     return (await this.httpService.getAll<UserModel>(config.URL + "/carpool/getParticipants/" + eventId));
   }
 
+  async registerToCarpool(carpoolId: number): Promise<UserModel[]> {
+    return (await this.httpService.post<UserModel>(config.URL + "/carpool/register/" + carpoolId));
+  }
+
+  async unregisterToCarpool(carpoolId: number): Promise<UserModel[]> {
+    return (await this.httpService.delete<UserModel>(config.URL + "/carpool/unregister/" + carpoolId));
+  }
+
 }

@@ -24,6 +24,8 @@ import { MyEventsComponent } from './components/my-events/my-events.component';
 import { MyZonesComponent } from './components/my-zones/my-zones.component';
 import { ZonesComponent } from './components/zones/zones.component';
 import {GalleriaModule} from "primeng/galleria";
+import { AddEventComponent } from './components/add-event/add-event.component';
+import { SignalZoneComponent } from './components/signal-zone/signal-zone.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import {GalleriaModule} from "primeng/galleria";
     MySpaceComponent,
     MyEventsComponent,
     MyZonesComponent,
-    ZonesComponent
+    ZonesComponent,
+    AddEventComponent,
+    SignalZoneComponent
   ],
   imports: [
     BrowserModule,

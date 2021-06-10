@@ -32,4 +32,12 @@ export class EventService {
     return (await this.httpService.getAll<UserModel>(config.URL + "/event/getParticipants/" + eventId));
   }
 
+  async registerToEvent(eventId: number): Promise<UserModel[]> {
+    return (await this.httpService.post<UserModel>(config.URL + "/event/register/" + eventId));
+  }
+
+  async unregisterToEvent(eventId: number): Promise<UserModel[]> {
+    return (await this.httpService.delete<UserModel>(config.URL + "/event/unregister/" + eventId));
+  }
+
 }
