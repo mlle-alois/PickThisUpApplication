@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-signal-zone',
@@ -7,8 +8,16 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class SignalZoneComponent implements OnInit {
 
-  @Input() isSignalZoneClicked: boolean;
-  //TODO faire circuler l'info entre parent et enfant avec get et set
+  _isSignalZoneClicked: boolean;
+  get isSignalZoneClicked(): boolean {
+    return this._isSignalZoneClicked;
+  }
+  @Input() set isSignalZoneClicked(value: boolean) {
+    this._isSignalZoneClicked = value;
+    this.isSignalZoneClickedChange.emit(this._isSignalZoneClicked);
+  }
+
+  @Output() isSignalZoneClickedChange = new EventEmitter<boolean>();
 
   constructor() {
   }

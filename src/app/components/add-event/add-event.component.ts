@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-add-event',
@@ -7,8 +7,16 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class AddEventComponent implements OnInit {
 
-  @Input() isAddEventClicked: boolean;
-  //TODO faire circuler l'info entre parent et enfant avec get et set
+  _isAddEventClicked: boolean;
+  get isAddEventClicked(): boolean {
+    return this._isAddEventClicked;
+  }
+  @Input() set isAddEventClicked(value: boolean) {
+    this._isAddEventClicked = value;
+    this.isAddEventClickedChange.emit(this._isAddEventClicked);
+  }
+
+  @Output() isAddEventClickedChange = new EventEmitter<boolean>();
 
   constructor() { }
 

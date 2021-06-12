@@ -43,4 +43,9 @@ export class ActionButtonsComponent implements OnInit {
     this.isAddEventClicked = false;
   }
 
+  isSignalZoneClickedClosed(value: boolean) {
+    console.log(value)
+    this.isSignalZoneClicked = value;
+  }
+
 }

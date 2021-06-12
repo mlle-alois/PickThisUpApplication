@@ -5,5 +5,5 @@
           class="p-button-rounded p-button-success action-button" (click)="onIsAddEventClicked()"></button>
 </div>
 
-<app-add-event *ngIf="isAddEventClicked" [isAddEventClicked]="isAddEventClicked"></app-add-event>
-<app-signal-zone *ngIf="isSignalZoneClicked" [isSignalZoneClicked]="isSignalZoneClicked"></app-signal-zone>
+<app-signal-zone *ngIf="isSignalZoneClicked" [isSignalZoneClicked]="isSignalZoneClicked" (isSignalZoneClickedChange)="isSignalZoneClicked = $event"></app-signal-zone>
+<app-add-event *ngIf="isAddEventClicked" [isAddEventClicked]="isAddEventClicked" (isAddEventClickedChange)="isAddEventClicked = $event"></app-add-event>
