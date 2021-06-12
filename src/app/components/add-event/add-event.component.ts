@@ -7,13 +7,13 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class AddEventComponent implements OnInit {
 
-  _isAddEventClicked: boolean;
+  isAddEventClickedValue: boolean;
   get isAddEventClicked(): boolean {
-    return this._isAddEventClicked;
+    return this.isAddEventClickedValue;
   }
   @Input() set isAddEventClicked(value: boolean) {
-    this._isAddEventClicked = value;
-    this.isAddEventClickedChange.emit(this._isAddEventClicked);
+    this.isAddEventClickedValue = value;
+    this.isAddEventClickedChange.emit(this.isAddEventClickedValue);
   }
 
   @Output() isAddEventClickedChange = new EventEmitter<boolean>();
