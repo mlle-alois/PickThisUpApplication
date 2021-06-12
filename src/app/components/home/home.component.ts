@@ -64,8 +64,11 @@ export class HomeComponent implements AfterViewInit, OnInit {
   async ngOnInit() {
     this.initToken();
     await this.initCurrentUser();
-    if(this.currentUser === undefined) {
-      window.location.reload();
+    if(this.currentUser === null || this.currentUser === undefined) {
+      this.authenticatedUserService.loadCurrentUser().then(async () => {
+        await this.initCurrentUser();
+        window.location.reload();
+      });
     }
   }
 
