@@ -50,6 +50,11 @@
   font-size: 12px;
 }
 
+.help-block
+{
+  color: red
+}
+
 .action-button {
   width: 75px !important;
   height: 75px !important;

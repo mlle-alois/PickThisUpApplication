@@ -22,5 +22,15 @@ export class ZoneService {
     return (await this.httpService.getAll<MediaModel>(config.URL + "/zone/get-pictures/" + zoneId));
   }
 
+  async signalZone(zone: ZoneModel): Promise<ZoneModel> {
+    return (await this.httpService.post<ZoneModel>(config.URL + "/zone/add", {
+      street: zone.zoneStreet,
+      zipcode: zone.zoneZipcode,
+      city: zone.zoneCity,
+      description: zone.zoneDescription,
+      pollutionLevel: zone.pollutionLevelId
+    }));
+  }
+
 
 }

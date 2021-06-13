@@ -25,7 +25,7 @@ export class CarpoolService {
   }
 
   async registerToCarpool(carpoolId: number): Promise<UserModel[]> {
-    return (await this.httpService.post<UserModel>(config.URL + "/carpool/register/" + carpoolId));
+    return (await this.httpService.postMultiRes<UserModel>(config.URL + "/carpool/register/" + carpoolId));
   }
 
   async unregisterToCarpool(carpoolId: number): Promise<UserModel[]> {
