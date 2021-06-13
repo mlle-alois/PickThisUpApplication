@@ -5,45 +5,45 @@
     <form [formGroup]="registerForm" (ngSubmit)="signalZone()">
 
       <fieldset class="form-group">
-        <input type="email" placeholder="Adresse" class="form-control" formControlName="adress" required>
+        <input type="email" placeholder="Adresse" class="form-control" formControlName="zoneStreet" required>
         <span
-          *ngIf="!registerForm.controls.adress.valid && registerForm.controls.adress.errors['required'] && registerForm.controls.adress.touched"
+          *ngIf="!registerForm.controls.zoneStreet.valid && registerForm.controls.zoneStreet.errors['required'] && registerForm.controls.zoneStreet.touched"
           class="help-block">Adresse obligatoire</span>
       </fieldset>
 
       <fieldset class="form-group">
-        <input type="text" placeholder="Code postal" class="form-control" formControlName="zipcode" maxlength="5"
+        <input type="text" placeholder="Code postal" class="form-control" formControlName="zoneZipcode" maxlength="5"
                required>
         <span
-          *ngIf="!registerForm.controls.zipcode.valid && registerForm.controls.zipcode.errors['required'] && registerForm.controls.zipcode.touched"
+          *ngIf="!registerForm.controls.zoneZipcode.valid && registerForm.controls.zoneZipcode.errors['required'] && registerForm.controls.zoneZipcode.touched"
           class="help-block">Code postal obligatoire</span>
         <span
-          *ngIf="!registerForm.controls.zipcode.valid && registerForm.controls.zipcode.errors['pattern'] && !registerForm.controls.zipcode.errors['required']"
+          *ngIf="!registerForm.controls.zoneZipcode.valid && registerForm.controls.zoneZipcode.errors['pattern'] && !registerForm.controls.zoneZipcode.errors['required']"
           class="help-block">Veuillez entrer un code postal valide</span>
       </fieldset>
 
       <fieldset class="form-group">
-        <input type="text" placeholder="Ville" class="form-control" formControlName="city" required>
+        <input type="text" placeholder="Ville" class="form-control" formControlName="zoneCity" required>
         <span
-          *ngIf="!registerForm.controls.city.valid && registerForm.controls.city.errors['required'] && registerForm.controls.city.touched"
+          *ngIf="!registerForm.controls.zoneCity.valid && registerForm.controls.zoneCity.errors['required'] && registerForm.controls.zoneCity.touched"
           class="help-block">Ville obligatoire</span>
       </fieldset>
       <fieldset class="form-group">
-        <p-autoComplete placeholder="Niveau de pollution" [(ngModel)]="pollutionLevel" [suggestions]="filteredItems"
-                        (completeMethod)="filterItems($event)" field="label" [dropdown]="true" forceSelection="true"
-                        formControlName="pollutionLevel" required>
+        <p-autoComplete placeholder="Niveau de pollution" [suggestions]="filteredItems"
+                        (completeMethod)="filterItems($event)" [dropdown]="true" forceSelection="true"
+                        formControlName="zonePollutionLevel" required>
         </p-autoComplete>
         <br/>
         <span
-          *ngIf="!registerForm.controls.pollutionLevel.valid && registerForm.controls.pollutionLevel.errors['required'] && registerForm.controls.pollutionLevel.touched"
+          *ngIf="!registerForm.controls.zonePollutionLevel.valid && registerForm.controls.zonePollutionLevel.errors['required'] && registerForm.controls.zonePollutionLevel.touched"
           class="help-block">Niveau de pollution obligatoire</span>
       </fieldset>
 
       <fieldset class="form-group">
-        <input placeholder="Description" type="text" class="form-control" formControlName="description" required>
+        <input placeholder="zoneDescription" type="text" class="form-control" formControlName="zoneDescription" required>
         <span
-          *ngIf="!registerForm.controls.description.valid && registerForm.controls.description.errors['required'] && registerForm.controls.description.touched"
-          class="help-block">Description obligatoire</span>
+          *ngIf="!registerForm.controls.zoneDescription.valid && registerForm.controls.zoneDescription.errors['required'] && registerForm.controls.zoneDescription.touched"
+          class="help-block">zoneDescription obligatoire</span>
       </fieldset>
 
       <fieldset class="form-group">

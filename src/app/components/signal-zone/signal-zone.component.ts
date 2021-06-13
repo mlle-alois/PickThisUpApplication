@@ -1,7 +1,5 @@
-
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Component, Input, OnInit, Output} from "@angular/core";
-import {EventEmitter} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {ZoneService} from "../../services/zone.service";
 
 @Component({
@@ -12,9 +10,11 @@ import {ZoneService} from "../../services/zone.service";
 export class SignalZoneComponent implements OnInit {
 
   isSignalZoneClickedValue: boolean;
+
   get isSignalZoneClicked(): boolean {
     return this.isSignalZoneClickedValue;
   }
+
   @Input() set isSignalZoneClicked(value: boolean) {
     this.isSignalZoneClickedValue = value;
     this.isSignalZoneClickedChange.emit(this.isSignalZoneClickedValue);
@@ -22,9 +22,8 @@ export class SignalZoneComponent implements OnInit {
 
   @Output() isSignalZoneClickedChange = new EventEmitter<boolean>();
 
-  pollutionLevel: string;
   filteredItems: any[];
-  pollutionLevelItems: any[] = [{label: 'Faible', value: '1'}, {label: 'Moyen', value: '2'}, {label: 'Elevé', value: '3'}];
+  pollutionLevelItems: any[] = ['Faible', 'Moyen', 'Elevé'];
 
   registerForm: FormGroup;
   message: any;
@@ -35,11 +34,11 @@ export class SignalZoneComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private zoneService: ZoneService) {
     this.registerForm = this.fb.group({
-      'adress': ['', Validators.required],
-      'city': ['', Validators.required],
-      'zipcode': ['', [Validators.pattern('[0-9]{5}'), Validators.required]],
-      'description': ['', Validators.required],
-      'pollutionLevel': ['', Validators.required]
+      'zoneStreet': ['', Validators.required],
+      'zoneCity': ['', Validators.required],
+      'zoneZipcode': ['', [Validators.pattern('[0-9]{5}'), Validators.required]],
+      'zoneDescription': ['', Validators.required],
+      'zonePollutionLevel': ['', Validators.required]
     });
   }
 
@@ -47,25 +46,30 @@ export class SignalZoneComponent implements OnInit {
     this.uploadedFiles = [];
   }
 
-  signalZone() {
+  async signalZone() {
     this.message = "";
     this.loading = "chargement...";
-    if(this.uploadedFiles.length === 0) {
+    if (this.uploadedFiles.length === 0) {
       this.message = "Veuillez saisir au moins 1 image.";
       this.loading = "";
       return;
     }
-    this.zoneService.signalZone(this.registerForm.value);
-
+    const zone = await this.zoneService.signalZone(this.registerForm.value);
+    this.uploadedFiles.forEach(async (file) => {
+      await this.zoneService.addPictureToZone(zone.zoneId, file.name);
+      //TODO mettre les fichiers uploadés dans assets
+    });
+    this.loading = "";
+    this.message = "Lieu signalé avec succès"
   }
 
   filterItems(event) {
-    let filtered : any[] = [];
+    let filtered: any[] = [];
     let query = event.query;
 
-    for(let i = 0; i < this.pollutionLevelItems.length; i++) {
+    for (let i = 0; i < this.pollutionLevelItems.length; i++) {
       let item = this.pollutionLevelItems[i];
-      if (item.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+      if (item.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(item);
       }
     }
@@ -74,8 +78,8 @@ export class SignalZoneComponent implements OnInit {
   }
 
   onSelect(event) {
-    for(let file of event.files) {
-        this.uploadedFiles.push(file);
+    for (let file of event.files) {
+      this.uploadedFiles.push(file);
     }
   }
 

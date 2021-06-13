@@ -93,7 +93,7 @@ export class HttpService {
             if (data.status === 204) {
               resolve;
             } else if (data.body) {
-              return data.body as T;
+              resolve(data.body as T);
             } else {
               reject;
             }

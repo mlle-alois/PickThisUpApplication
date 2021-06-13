@@ -1,7 +1,7 @@
 export interface IZoneProps {
   zoneId: number;
   zoneStreet: string;
-  zoneZipcode: number;
+  zoneZipcode: string;
   zoneCity: string;
   zoneDescription: string;
   signalmanId: string;
@@ -12,7 +12,7 @@ export interface IZoneProps {
 export class ZoneModel implements IZoneProps {
   zoneId: number;
   zoneStreet: string;
-  zoneZipcode: number;
+  zoneZipcode: string;
   zoneCity: string;
   zoneDescription: string;
   signalmanId: string;
