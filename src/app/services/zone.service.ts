@@ -21,6 +21,10 @@ export class ZoneService {
     return (await this.httpService.getAll<MediaModel>(config.URL + "/zone/get-pictures/" + zoneId));
   }
 
+  async getAvailableZones(): Promise<ZoneModel[]> {
+    return (await this.httpService.getAll<ZoneModel>(config.URL + "/zone/"));
+  }
+
   async signalZone(zone: ZoneModel): Promise<ZoneModel> {
     let pollutionLevel: PollutionLevel;
     if(zone['zonePollutionLevel'] as unknown as string === 'Faible') {

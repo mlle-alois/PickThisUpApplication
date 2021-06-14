@@ -27,6 +27,10 @@ import {AddEventComponent} from './components/add-event/add-event.component';
 import {SignalZoneComponent} from './components/signal-zone/signal-zone.component';
 import {AutoCompleteModule} from "primeng/autocomplete";
 import {FileUploadModule} from "primeng/fileupload";
+import {ToastModule} from "primeng/toast";
+import {CalendarModule} from "primeng/calendar";
+import {ListboxModule} from "primeng/listbox";
+import {DropdownModule} from "primeng/dropdown";
 
 @NgModule({
   declarations: [
@@ -60,7 +64,11 @@ import {FileUploadModule} from "primeng/fileupload";
     GalleriaModule,
     FormsModule,
     AutoCompleteModule,
-    FileUploadModule
+    FileUploadModule,
+    ToastModule,
+    CalendarModule,
+    ListboxModule,
+    DropdownModule
   ],
   providers: [HttpClient],
   bootstrap: [AppComponent]

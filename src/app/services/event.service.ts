@@ -6,7 +6,7 @@ import {HttpService} from "./http.service";
 import {EventModel} from "../models/event.model";
 import {MyDate} from "../utils/MyDate";
 import {UserModel} from "../models/user.model";
-import {MediaModel} from "../models/media.model";
+import {ZoneModel} from "../models/zone.model";
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +38,19 @@ export class EventService {
 
   async unregisterToEvent(eventId: number): Promise<UserModel[]> {
     return (await this.httpService.delete<UserModel>(config.URL + "/event/unregister/" + eventId));
+  }
+
+  async createEvent(event: EventModel, zone: ZoneModel): Promise<EventModel> {
+    console.log(event)
+    return (await this.httpService.post<EventModel>(config.URL + "/event/add", {
+      title: event['eventTitle'],
+      description: event['eventDescription'],
+      dateHourStart: event['dateHourStart'],
+      dateHourEnd: event['dateHourEnd'],
+      maxNbPlaces: event['eventMaxNbPlaces'],
+      pictureId: event['eventPitureId'],
+      zoneId: zone.zoneId
+    }));
   }
 
 }
