@@ -41,7 +41,6 @@ export class EventService {
   }
 
   async createEvent(event: EventModel, zone: ZoneModel): Promise<EventModel> {
-    console.log(event)
     return (await this.httpService.post<EventModel>(config.URL + "/event/add", {
       title: event['eventTitle'],
       description: event['eventDescription'],
