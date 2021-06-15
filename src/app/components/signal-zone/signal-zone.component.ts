@@ -1,6 +1,7 @@
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {ZoneService} from "../../services/zone.service";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-signal-zone',
@@ -26,13 +27,13 @@ export class SignalZoneComponent implements OnInit {
   pollutionLevelItems: any[] = ['Faible', 'Moyen', 'Elevé'];
 
   registerForm: FormGroup;
-  message: any;
   loading = "";
 
   uploadedFiles: any[];
 
   constructor(private fb: FormBuilder,
-              private zoneService: ZoneService) {
+              private zoneService: ZoneService,
+              private messageService: MessageService) {
     this.registerForm = this.fb.group({
       'zoneStreet': ['', Validators.required],
       'zoneCity': ['', Validators.required],
@@ -47,10 +48,9 @@ export class SignalZoneComponent implements OnInit {
   }
 
   async signalZone() {
-    this.message = "";
     this.loading = "chargement...";
     if (this.uploadedFiles.length === 0) {
-      this.message = "Veuillez saisir au moins 1 image.";
+      this.messageService.add({severity: 'warn', summary: 'Conflit', detail: 'Veuillez saisir au moins 1 image.'});
       this.loading = "";
       return;
     }
@@ -60,7 +60,8 @@ export class SignalZoneComponent implements OnInit {
       //TODO mettre les fichiers uploadés dans assets
     });
     this.loading = "";
-    this.message = "Lieu signalé avec succès"
+    this.isSignalZoneClickedChange.emit(false);
+    this.messageService.add({severity: 'warn', summary: 'Signalé', detail: 'Lieu signalé avec succès'});
   }
 
   filterItems(event) {

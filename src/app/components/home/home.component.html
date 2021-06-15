@@ -32,7 +32,7 @@
             <p-button
               *ngIf="event.dateHourStart > currentTimestamp && event.eventRemainingPlaces > 0 &&
               !currentUserParticipateToEvents.get(event.eventId) && currentUser.mail !== event.creatorId"
-              label="Participer" (onClick)="participateToEvent(event, $event)"
+              label="Participer" (onClick)="proposeCarpool(event, $event)"
               icon="pi pi-check" styleClass="p-button-success"
               [style]="{'margin-left': '.5em'}"></p-button>
             <p-button
@@ -143,7 +143,7 @@
     <p-button
       *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleEvent.eventRemainingPlaces > 0 &&
       !currentUserParticipateToEvents.get(visibleEvent.eventId) && currentUser.mail !== visibleEvent.creatorId"
-      label="Participer à l'événement" (onClick)="participateToEvent(visibleEvent, $event)"
+      label="Participer à l'événement" (onClick)="proposeCarpool(visibleEvent, $event)"
       icon="pi pi-check" styleClass="p-button-success"
       [style]="{'margin-left': '.5em'}"></p-button>
     <p-button
@@ -203,48 +203,76 @@
 <!-- endregion-->
 
 <!-- region Propose Carpool-->
-<!--<p-dialog *ngIf="visibleCarpool" [(visible)]="proposeCarpool"
-          header="Détails du covoiturage de {{visibleCarpool.conductorId}}"
-          [style]="{width: '40vw'}">
-  <div>
-    <h2>Adresse de départ</h2>
-    <div>
-      <img src="assets/map-marker-alt-solid.svg" alt="" class="icon"/>
-      <p class="bold-text">
-        {{visibleCarpool.carpoolDepartureStreet}}<br/>
-        {{visibleCarpool.carpoolDepartureCity}} {{visibleCarpool.carpoolDepartureZipcode}}<br/>
-      </p>
-    </div>
-    <p>Conducteur : <span class="bold-text">{{visibleCarpool.conductor.firstname}} {{visibleCarpool.conductor.name}} :
-      {{visibleCarpool.conductorId}}, {{visibleCarpool.conductor.phoneNumber}}</span></p>
-    <div style="text-align: right"
-         *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleCarpool.carpoolRemainingPlaces > 0">
-      <span class="bold-text">{{visibleCarpool.carpoolRemainingPlaces}}</span> places restantes
-    </div>
+<p-dialog [(visible)]="isProposeCarpool"
+          header="Proposer un covoiturage"
+          [style]="{width: '80vw'}">
+  <div class="card card-body">
+    <form [formGroup]="registerForm" (ngSubmit)="createCarpool()">
+      <!--<fieldset class="form-group">
+        <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)" placeholder="Lieu de l'événement" formControlName="zoneId"></p-dropdown>
+        <br/>
+        <span
+          *ngIf="!registerForm.controls.zoneId.valid && registerForm.controls.zoneId.errors['required'] && registerForm.controls.zoneId.touched"
+          class="help-block">Lieu obligatoire</span>
+      </fieldset>
 
-    <h3>Participants</h3>
-    <p-table [value]="carpoolParticipants">
-      <ng-template pTemplate="body" let-participant>
-        <tr>
-          <td>{{participant.firstname}} {{participant.name}}
-            - {{participant.mail}}</td>
-        </tr>
-      </ng-template>
-    </p-table>
+      <fieldset class="form-group">
+        <input type="text" placeholder="Titre" class="form-control" formControlName="eventTitle" required>
+        <span
+          *ngIf="!registerForm.controls.eventTitle.valid && registerForm.controls.eventTitle.errors['required'] && registerForm.controls.eventTitle.touched"
+          class="help-block">Titre obligatoire</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <p-calendar placeholder="Date/Heure de début" [showTime]="true" formControlName="dateHourStart" required></p-calendar>
+        <br/>
+        <span
+          *ngIf="!registerForm.controls.dateHourStart.valid && registerForm.controls.dateHourStart.errors['required'] && registerForm.controls.dateHourStart.touched"
+          class="help-block">Date/Heure de début obligatoire</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <p-calendar placeholder="Date/Heure de fin" [showTime]="true" formControlName="dateHourEnd" required></p-calendar>
+        <br/>
+        <span
+          *ngIf="!registerForm.controls.dateHourEnd.valid && registerForm.controls.dateHourEnd.errors['required'] && registerForm.controls.dateHourEnd.touched"
+          class="help-block">Date/Heure de fin obligatoire</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <input placeholder="Description" type="text" class="form-control" formControlName="eventDescription" required>
+        <span
+          *ngIf="!registerForm.controls.eventDescription.valid && registerForm.controls.eventDescription.errors['required'] && registerForm.controls.eventDescription.touched"
+          class="help-block">Description obligatoire</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <input type="text" placeholder="Nombre de places" class="form-control" formControlName="eventMaxNbPlaces" maxlength="5"
+               required>
+        <span
+          *ngIf="!registerForm.controls.eventMaxNbPlaces.valid && registerForm.controls.eventMaxNbPlaces.errors['required'] && registerForm.controls.eventMaxNbPlaces.touched"
+          class="help-block">Nombre de places obligatoire</span>
+        <span
+          *ngIf="!registerForm.controls.eventMaxNbPlaces.valid && registerForm.controls.eventMaxNbPlaces.errors['pattern'] && !registerForm.controls.eventMaxNbPlaces.errors['required']"
+          class="help-block">Veuillez entrer un nombre de places valide</span>
+      </fieldset>
+
+      <fieldset class="form-group" *ngIf="selectedZonePictures">
+        <label>Image de l'événement</label>
+        <p-listbox [options]="selectedZonePictures" optionLabel="path" optionValue="pictureId" formControlName="eventPitureId" [checkbox]="true" [filter]="false" [multiple]="false">
+          <ng-template pTemplate="item" let-picture>
+            <img src="assets/pictures/{{picture['path']}}" class="list-icon" alt="zone picture"/>
+          </ng-template>
+        </p-listbox>
+      </fieldset>-->
+
+      <fieldset class="form-group">
+        <button pButton type="submit" label="Proposer le covoiturage" class="p-button-secondary"
+                [disabled]="!registerForm.valid"></button>
+      </fieldset>
+      <p>{{loading}}</p>
+      <p>{{message}}</p>
+    </form>
   </div>
-  <ng-template pTemplate="footer">
-    <p-button
-      *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleCarpool.carpoolRemainingPlaces > 0 &&
-              !currentUserParticipateToCarpools.get(visibleCarpool.carpoolId) && !currentUserParticipateToCarpool &&
-              currentUser.mail !== visibleCarpool.conductorId && currentUserParticipateToEvents.get(visibleEvent.eventId)"
-      label="Participer au covoiturage" (onClick)="participateToCarpool(visibleCarpool)"
-      icon="pi pi-check" styleClass="p-button-success"
-      [style]="{'margin-left': '.5em'}"></p-button>
-    <p-button
-      *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToCarpools.get(visibleCarpool.carpoolId)"
-      label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpool(visibleCarpool)"
-      icon="pi pi-check" styleClass="p-button-danger"
-      [style]="{'margin-left': '.5em'}"></p-button>
-  </ng-template>
-</p-dialog>-->
+</p-dialog>
 <!-- endregion-->

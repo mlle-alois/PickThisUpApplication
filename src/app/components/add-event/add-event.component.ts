@@ -1,11 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {EventService} from "../../services/event.service";
-import {SelectItemGroup} from "primeng/api";
 import {ZoneModel} from "../../models/zone.model";
 import {ZoneService} from "../../services/zone.service";
-import {MediaModel} from "../../models/media.model";
 import {DateUtils} from "../../utils/DateUtils";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-add-event',
@@ -31,7 +30,6 @@ export class AddEventComponent implements OnInit {
   pollutionLevelItems: any[] = ['Faible', 'Moyen', 'Elevé'];
 
   registerForm: FormGroup;
-  message: any;
   loading = "";
 
   availableZones: ZoneModel[];
@@ -42,7 +40,8 @@ export class AddEventComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private eventService: EventService,
-              private zoneService: ZoneService) {
+              private zoneService: ZoneService,
+              private messageService: MessageService) {
     this.registerForm = this.fb.group({
       'zoneId': ['', Validators.required],
       'eventTitle': ['', Validators.required],
@@ -66,21 +65,21 @@ export class AddEventComponent implements OnInit {
   }
 
   async createEvent() {
-    this.message = "";
     this.loading = "chargement...";
     if(this.registerForm.value['dateHourStart'] >= this.registerForm.value['dateHourEnd']) {
-      this.message = "Veuillez saisir une date de début précédant la date de fin"
+      this.messageService.add({severity: 'warn', summary: 'Conflit', detail: 'Veuillez saisir une date de début précédant la date de fin'});
       this.loading = "";
       return;
     }
     if(this.registerForm.value['dateHourStart'] <= DateUtils.getCurrentDate()) {
-      this.message = "Veuillez saisir une date de début supérieure à la date actuelle"
+      this.messageService.add({severity: 'warn', summary: 'Conflit', detail: 'Veuillez saisir une date de début supérieure à la date actuelle'});
       this.loading = "";
       return;
     }
     await this.eventService.createEvent(this.registerForm.value, this.selectedZone);
     this.loading = "";
-    this.message = "L'événement a été créé !"
+    this.isAddEventClickedChange.emit(false);
+    this.messageService.add({severity: 'info', summary: 'Créé', detail: 'L\'événement a été créé !'});
   }
 
   filterItems(event) {

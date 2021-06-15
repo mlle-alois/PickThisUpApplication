@@ -11,6 +11,7 @@ import {CarpoolService} from "../../services/carpool.service";
 import {MediaModel} from "../../models/media.model";
 import {ZoneService} from "../../services/zone.service";
 import {ConfirmationService, MessageService} from "primeng/api";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-home',
@@ -39,7 +40,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   eventPictures: MediaModel[];
 
-  proposeCarpool = false;
+  isProposeCarpool = false;
 
   responsiveOptions: any[] = [
     {
@@ -56,7 +57,13 @@ export class HomeComponent implements AfterViewInit, OnInit {
     }
   ];
 
+  registerForm: FormGroup;
+  message: any;
+  loading = "";
+  selectedEvent: EventModel;
+
   constructor(private router: Router,
+              private formBuilder: FormBuilder,
               private route: ActivatedRoute,
               private authenticatedUserService: AuthenticatedUserService,
               private eventService: EventService,
@@ -64,6 +71,15 @@ export class HomeComponent implements AfterViewInit, OnInit {
               private zoneService: ZoneService,
               private confirmationService: ConfirmationService,
               private messageService: MessageService) {
+    this.registerForm = this.formBuilder.group({
+      'zoneId': ['', Validators.required],
+      'eventTitle': ['', Validators.required],
+      'eventDescription': ['', Validators.required],
+      'dateHourStart': ['', Validators.required],
+      'dateHourEnd': ['', Validators.required],
+      'eventMaxNbPlaces': ['', [Validators.pattern('[1-9]{1}[0-9]*'), Validators.required]],
+      'eventPitureId': ['', Validators.required]
+    });
   }
 
   async ngOnInit() {
@@ -137,27 +153,41 @@ export class HomeComponent implements AfterViewInit, OnInit {
       });
   }
 
-  async participateToEvent(event: EventModel, e: Event) {
+  async proposeCarpool(event: EventModel, e: Event) {
     this.confirmationService.confirm({
       target: e.target,
       message: 'Voulez-vous proposer un covoiturage pour cet événement ?',
       icon: 'pi pi-users',
-      accept: () => {
+      accept: async () => {
         //TODO traitement de création de covoiturage (popup etc...)
+        this.selectedEvent = event;
+        this.isProposeCarpool = true;
+
       },
-      reject: () => {
+      reject: async () => {
         this.messageService.add({
           severity: 'warn',
           summary: 'Pas de covoiturage proposé',
           detail: 'Si vous changez d\'avis, il faudra vous désincrire de l\'événement et vous réinscrire'
         });
+        await this.participateToEvent(event);
       }
     });
+  }
+
+  async createCarpool() {
+
+    this.messageService.add({severity: 'info', summary: 'Créé', detail: 'Covoiturage proposé'});
+    this.isProposeCarpool = false;
+    await this.participateToEvent(this.selectedEvent);
+  }
+
+  async participateToEvent(event: EventModel) {
     this.eventParticipants = await this.eventService.registerToEvent(event.eventId);
     this.events = await this.eventService.getAvailableEvents();
     this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
     this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
-    this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Inscription validée'});
+    this.messageService.add({severity: 'info', summary: 'Inscrit', detail: 'Inscription validée'});
   }
 
   async unsubscribeToEvent(event: EventModel, e: Event) {
@@ -170,7 +200,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
         this.events = await this.eventService.getAvailableEvents();
         this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
         this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
-        this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Désinscription effectuée'});
+        this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
       }
     });
   }
@@ -193,7 +223,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
         this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
         this.visibleCarpool = this.eventCarpools.find(event => event.carpoolId === carpool.carpoolId);
         this.currentUserParticipateToCarpool = false;
-        this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Désinscription effectuée'});
+        this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
       }
     });
   }

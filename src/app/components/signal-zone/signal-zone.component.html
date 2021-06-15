@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-dialog [(visible)]="isSignalZoneClicked"
           header="Signaler un lieu"
           [style]="{width: '80vw'}">
@@ -39,7 +40,7 @@
       </fieldset>
 
       <fieldset class="form-group">
-        <input placeholder="zoneDescription" type="text" class="form-control" formControlName="zoneDescription" required>
+        <input placeholder="Description" type="text" class="form-control" formControlName="zoneDescription" required>
         <span
           *ngIf="!registerForm.controls.zoneDescription.valid && registerForm.controls.zoneDescription.errors['required'] && registerForm.controls.zoneDescription.touched"
           class="help-block">zoneDescription obligatoire</span>
@@ -57,7 +58,6 @@
                 [disabled]="!registerForm.valid"></button>
       </fieldset>
       <p>{{loading}}</p>
-      <p>{{message}}</p>
     </form>
   </div>
 </p-dialog>

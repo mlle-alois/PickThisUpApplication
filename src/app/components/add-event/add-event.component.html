@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-dialog [(visible)]="isAddEventClicked"
           header="Créer un événement"
           [style]="{width: '80vw'}">
@@ -66,7 +67,6 @@
                 [disabled]="!registerForm.valid"></button>
       </fieldset>
       <p>{{loading}}</p>
-      <p>{{message}}</p>
     </form>
   </div>
 </p-dialog>
