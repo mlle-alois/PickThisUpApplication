@@ -53,10 +53,12 @@
         </p-fileUpload>
       </fieldset>
 
-      <fieldset class="form-group">
-        <button pButton type="submit" label="Signaler ce lieu" class="p-button-secondary"
-                [disabled]="!registerForm.valid"></button>
-      </fieldset>
+      <div style="text-align: right !important;">
+        <fieldset class="form-group">
+          <button pButton type="submit" label="Signaler ce lieu" class="p-button-secondary"
+                  [disabled]="!registerForm.valid"></button>
+        </fieldset>
+      </div>
       <p>{{loading}}</p>
     </form>
   </div>

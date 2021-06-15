@@ -5,7 +5,8 @@
   <div class="card card-body">
     <form [formGroup]="registerForm" (ngSubmit)="createEvent()">
       <fieldset class="form-group">
-        <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)" placeholder="Lieu de l'événement" formControlName="zoneId"></p-dropdown>
+        <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)"
+                    placeholder="Lieu de l'événement" formControlName="zoneId"></p-dropdown>
         <br/>
         <span
           *ngIf="!registerForm.controls.zoneId.valid && registerForm.controls.zoneId.errors['required'] && registerForm.controls.zoneId.touched"
@@ -20,7 +21,8 @@
       </fieldset>
 
       <fieldset class="form-group">
-        <p-calendar placeholder="Date/Heure de début" [showTime]="true" formControlName="dateHourStart" required></p-calendar>
+        <p-calendar placeholder="Date/Heure de début" [showTime]="true" formControlName="dateHourStart"
+                    required></p-calendar>
         <br/>
         <span
           *ngIf="!registerForm.controls.dateHourStart.valid && registerForm.controls.dateHourStart.errors['required'] && registerForm.controls.dateHourStart.touched"
@@ -28,7 +30,8 @@
       </fieldset>
 
       <fieldset class="form-group">
-        <p-calendar placeholder="Date/Heure de fin" [showTime]="true" formControlName="dateHourEnd" required></p-calendar>
+        <p-calendar placeholder="Date/Heure de fin" [showTime]="true" formControlName="dateHourEnd"
+                    required></p-calendar>
         <br/>
         <span
           *ngIf="!registerForm.controls.dateHourEnd.valid && registerForm.controls.dateHourEnd.errors['required'] && registerForm.controls.dateHourEnd.touched"
@@ -43,7 +46,8 @@
       </fieldset>
 
       <fieldset class="form-group">
-        <input type="text" placeholder="Nombre de places" class="form-control" formControlName="eventMaxNbPlaces" maxlength="5"
+        <input type="text" placeholder="Nombre de places" class="form-control" formControlName="eventMaxNbPlaces"
+               maxlength="5"
                required>
         <span
           *ngIf="!registerForm.controls.eventMaxNbPlaces.valid && registerForm.controls.eventMaxNbPlaces.errors['required'] && registerForm.controls.eventMaxNbPlaces.touched"
@@ -55,17 +59,20 @@
 
       <fieldset class="form-group" *ngIf="selectedZonePictures">
         <label>Image de l'événement</label>
-        <p-listbox [options]="selectedZonePictures" optionLabel="path" optionValue="pictureId" formControlName="eventPitureId" [checkbox]="true" [filter]="false" [multiple]="false">
+        <p-listbox [options]="selectedZonePictures" optionLabel="path" optionValue="pictureId"
+                   formControlName="eventPitureId" [checkbox]="true" [filter]="false" [multiple]="false">
           <ng-template pTemplate="item" let-picture>
-              <img src="assets/pictures/{{picture['path']}}" class="list-icon" alt="zone picture"/>
+            <img src="assets/pictures/{{picture['path']}}" class="list-icon" alt="zone picture"/>
           </ng-template>
         </p-listbox>
       </fieldset>
 
-      <fieldset class="form-group">
-        <button pButton type="submit" label="Créer l'événement" class="p-button-secondary"
-                [disabled]="!registerForm.valid"></button>
-      </fieldset>
+      <div style="text-align: right !important;">
+        <fieldset class="form-group">
+          <button pButton type="submit" label="Créer l'événement" class="p-button-secondary"
+                  [disabled]="!registerForm.valid"></button>
+        </fieldset>
+      </div>
       <p>{{loading}}</p>
     </form>
   </div>
