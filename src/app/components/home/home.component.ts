@@ -72,25 +72,22 @@ export class HomeComponent implements AfterViewInit, OnInit {
               private confirmationService: ConfirmationService,
               private messageService: MessageService) {
     this.registerForm = this.formBuilder.group({
-      'zoneId': ['', Validators.required],
-      'eventTitle': ['', Validators.required],
-      'eventDescription': ['', Validators.required],
-      'dateHourStart': ['', Validators.required],
-      'dateHourEnd': ['', Validators.required],
-      'eventMaxNbPlaces': ['', [Validators.pattern('[1-9]{1}[0-9]*'), Validators.required]],
-      'eventPitureId': ['', Validators.required]
+      'carpoolDepartureStreet': ['', Validators.required],
+      'carpoolDepartureCity': ['', Validators.required],
+      'carpoolDepartureZipcode': ['', [Validators.pattern('[0-9]{5}'), Validators.required]],
+      'nbPlaces': ['', [Validators.pattern('[1-9]{1}[0-9]*'), Validators.required]]
     });
   }
 
   async ngOnInit() {
     this.initToken();
     await this.initCurrentUser();
-    if (this.currentUser === null || this.currentUser === undefined) {
+    /*if (this.currentUser === null || this.currentUser === undefined) {
       this.authenticatedUserService.loadCurrentUser().then(async () => {
         await this.initCurrentUser();
         window.location.reload();
       });
-    }
+    }*/
   }
 
   async ngAfterViewInit() {
@@ -159,10 +156,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
       message: 'Voulez-vous proposer un covoiturage pour cet événement ?',
       icon: 'pi pi-users',
       accept: async () => {
-        //TODO traitement de création de covoiturage (popup etc...)
         this.selectedEvent = event;
         this.isProposeCarpool = true;
-
       },
       reject: async () => {
         this.messageService.add({
@@ -176,7 +171,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   }
 
   async createCarpool() {
-
+    this.carpoolService.proposeCarpool(this.registerForm.value, this.selectedEvent);
     this.messageService.add({severity: 'info', summary: 'Créé', detail: 'Covoiturage proposé'});
     this.isProposeCarpool = false;
     await this.participateToEvent(this.selectedEvent);
@@ -252,6 +247,10 @@ export class HomeComponent implements AfterViewInit, OnInit {
   async setCurrentUserParticipateToCarpools(carpools: CarpoolModel[]): Promise<Map<number, boolean>> {
     const currentUserParticipateToCarpools = new Map();
     for (let i = 0; i < carpools.length; i += 1) {
+      if(carpools[i].conductorId === this.currentUser.mail) {
+        this.currentUserParticipateToCarpool = true;
+        continue;
+      }
       const participants = await this.getParticipantsOfCarpool(carpools[i]);
       let j;
       for (j = 0; j < participants.length; j += 1) {
