@@ -21,24 +21,6 @@
       </fieldset>
 
       <fieldset class="form-group">
-        <p-calendar placeholder="Date/Heure de début" [showTime]="true" formControlName="dateHourStart"
-                    required></p-calendar>
-        <br/>
-        <span
-          *ngIf="!registerForm.controls.dateHourStart.valid && registerForm.controls.dateHourStart.errors['required'] && registerForm.controls.dateHourStart.touched"
-          class="help-block">Date/Heure de début obligatoire</span>
-      </fieldset>
-
-      <fieldset class="form-group">
-        <p-calendar placeholder="Date/Heure de fin" [showTime]="true" formControlName="dateHourEnd"
-                    required></p-calendar>
-        <br/>
-        <span
-          *ngIf="!registerForm.controls.dateHourEnd.valid && registerForm.controls.dateHourEnd.errors['required'] && registerForm.controls.dateHourEnd.touched"
-          class="help-block">Date/Heure de fin obligatoire</span>
-      </fieldset>
-
-      <fieldset class="form-group">
         <input placeholder="Description" type="text" class="form-control" formControlName="eventDescription" required>
         <span
           *ngIf="!registerForm.controls.eventDescription.valid && registerForm.controls.eventDescription.errors['required'] && registerForm.controls.eventDescription.touched"
@@ -55,6 +37,24 @@
         <span
           *ngIf="!registerForm.controls.eventMaxNbPlaces.valid && registerForm.controls.eventMaxNbPlaces.errors['pattern'] && !registerForm.controls.eventMaxNbPlaces.errors['required']"
           class="help-block">Veuillez entrer un nombre de places valide</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <p-calendar placeholder="Date/Heure de début" [showTime]="true" formControlName="dateHourStart"
+                    required></p-calendar>
+        <br/>
+        <span
+          *ngIf="!registerForm.controls.dateHourStart.valid && registerForm.controls.dateHourStart.errors['required'] && registerForm.controls.dateHourStart.touched"
+          class="help-block">Date/Heure de début obligatoire</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <p-calendar placeholder="Date/Heure de fin" [showTime]="true" formControlName="dateHourEnd"
+                    required></p-calendar>
+        <br/>
+        <span
+          *ngIf="!registerForm.controls.dateHourEnd.valid && registerForm.controls.dateHourEnd.errors['required'] && registerForm.controls.dateHourEnd.touched"
+          class="help-block">Date/Heure de fin obligatoire</span>
       </fieldset>
 
       <fieldset class="form-group" *ngIf="selectedZonePictures">
