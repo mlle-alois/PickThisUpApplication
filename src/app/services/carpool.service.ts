@@ -36,7 +36,6 @@ export class CarpoolService {
   }
 
   async proposeCarpool(carpool: CarpoolModel, event: EventModel): Promise<CarpoolModel> {
-    console.log(carpool)
     return (await this.httpService.post<CarpoolModel>(config.URL + "/carpool/add", {
       street: carpool['carpoolDepartureStreet'],
       zipcode: carpool['carpoolDepartureZipcode'],

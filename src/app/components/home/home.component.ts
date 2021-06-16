@@ -194,6 +194,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
         this.eventParticipants = await this.eventService.unregisterToEvent(event.eventId);
         this.events = await this.eventService.getAvailableEvents();
         this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
+        //TODO désinscrire de tous les covoiturages de l'événement
         this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
         this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
       }
