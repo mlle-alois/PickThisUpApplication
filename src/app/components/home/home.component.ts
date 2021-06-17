@@ -162,9 +162,11 @@ export class HomeComponent implements AfterViewInit, OnInit {
       icon: 'pi pi-users',
       accept: async () => {
         this.selectedEvent = event;
-        (await this.carpoolService.getOldAdressesCarpoolOfUser()).forEach((adress) => {
-          this.oldAdresses.push({adressString: adress['street'] + " " + adress['zipcode'] + " " + adress['city'], adress: adress})
-        });
+        if(this.oldAdresses.length === 0) {
+          (await this.carpoolService.getOldAdressesCarpoolOfUser()).forEach((adress) => {
+            this.oldAdresses.push({adressString: adress['street'] + " " + adress['zipcode'] + " " + adress['city'], adress: adress})
+          });
+        }
         this.isProposeCarpool = true;
       },
       reject: async () => {
@@ -182,7 +184,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.carpoolService.proposeCarpool(this.registerForm.value, this.selectedEvent);
     this.messageService.add({severity: 'info', summary: 'Créé', detail: 'Covoiturage proposé'});
     this.isProposeCarpool = false;
-    this.oldAdresses = [];
     await this.participateToEvent(this.selectedEvent);
   }
 
