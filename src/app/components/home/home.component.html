@@ -210,18 +210,16 @@
           [style]="{width: '80vw'}">
   <div class="card card-body">
     <form [formGroup]="registerForm" (ngSubmit)="createCarpool()">
-      <!--TODO anciennes adresses-->
-      <!--<fieldset class="form-group">
-        <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)" placeholder="Lieu de l'événement" formControlName="zoneId"></p-dropdown>
+      <fieldset class="form-group">
+        <label>Adresse existante</label>
         <br/>
-        <span
-          *ngIf="!registerForm.controls.zoneId.valid && registerForm.controls.zoneId.errors['required'] && registerForm.controls.zoneId.touched"
-          class="help-block">Lieu obligatoire</span>
-      </fieldset>-->
+        <p-dropdown [options]="oldAdresses" optionLabel="adressString" (onChange)="onSelect($event)"
+                    placeholder="Adresse existante"></p-dropdown>
+      </fieldset>
 
       <fieldset class="form-group">
         <label>Adresse</label>
-        <input type="text" placeholder="Adresse" class="form-control" formControlName="carpoolDepartureStreet" required>
+        <input type="text" placeholder="Adresse" [(ngModel)]="carpoolStreet" class="form-control" formControlName="carpoolDepartureStreet" required>
         <span
           *ngIf="!registerForm.controls.carpoolDepartureStreet.valid && registerForm.controls.carpoolDepartureStreet.errors['required'] && registerForm.controls.carpoolDepartureStreet.touched"
           class="help-block">Adresse obligatoire</span>
@@ -229,7 +227,7 @@
 
       <fieldset class="form-group">
         <label>Code postal</label>
-        <input type="text" placeholder="Code postal" class="form-control" formControlName="carpoolDepartureZipcode"
+        <input type="text" placeholder="Code postal" [(ngModel)]="carpoolZipcode" class="form-control" formControlName="carpoolDepartureZipcode"
                maxlength="5"
                required>
         <span
@@ -242,7 +240,7 @@
 
       <fieldset class="form-group">
         <label>Ville</label>
-        <input type="text" placeholder="Ville" class="form-control" formControlName="carpoolDepartureCity" required>
+        <input type="text" placeholder="Ville" [(ngModel)]="carpoolCity" class="form-control" formControlName="carpoolDepartureCity" required>
         <span
           *ngIf="!registerForm.controls.carpoolDepartureCity.valid && registerForm.controls.carpoolDepartureCity.errors['required'] && registerForm.controls.carpoolDepartureCity.touched"
           class="help-block">Ville obligatoire</span>

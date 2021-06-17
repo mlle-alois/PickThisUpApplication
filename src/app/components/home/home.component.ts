@@ -40,6 +40,11 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   eventPictures: MediaModel[];
 
+  oldAdresses = [];
+  carpoolStreet: string = "";
+  carpoolZipcode: string = "";
+  carpoolCity: string = "";
+
   isProposeCarpool = false;
 
   responsiveOptions: any[] = [
@@ -157,6 +162,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
       icon: 'pi pi-users',
       accept: async () => {
         this.selectedEvent = event;
+        (await this.carpoolService.getOldAdressesCarpoolOfUser()).forEach((adress) => {
+          this.oldAdresses.push({adressString: adress['street'] + " " + adress['zipcode'] + " " + adress['city'], adress: adress})
+        });
         this.isProposeCarpool = true;
       },
       reject: async () => {
@@ -174,6 +182,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.carpoolService.proposeCarpool(this.registerForm.value, this.selectedEvent);
     this.messageService.add({severity: 'info', summary: 'Créé', detail: 'Covoiturage proposé'});
     this.isProposeCarpool = false;
+    this.oldAdresses = [];
     await this.participateToEvent(this.selectedEvent);
   }
 
@@ -204,7 +213,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   async unsubscribeUserToEventCarpools(event: EventModel) {
     this.eventCarpools = await this.getCarpoolsOfEvent(event);
-    console.log(this.eventCarpools)
     this.eventCarpools.forEach((eventCarpool) => {
       if(this.currentUserParticipateToCarpools.get(eventCarpool.carpoolId)) {
         this.unsubscribeToCarpool(eventCarpool);
@@ -282,5 +290,11 @@ export class HomeComponent implements AfterViewInit, OnInit {
       }
     }
     return currentUserParticipateToCarpools;
+  }
+
+  onSelect(event: Event) {
+    this.carpoolStreet = event['value'].adress.street;
+    this.carpoolZipcode = event['value'].adress.zipcode;
+    this.carpoolCity = event['value'].adress.city;
   }
 }

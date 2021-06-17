@@ -5,8 +5,6 @@ import {AuthenticatedUserService} from "./authenticated-user.service";
 import {HttpService} from "./http.service";
 import {CarpoolModel} from "../models/carpool.model";
 import {UserModel} from "../models/user.model";
-import {ZoneModel} from "../models/zone.model";
-import {PollutionLevel} from "../enum/pollution-level";
 import {EventModel} from "../models/event.model";
 
 @Injectable({
@@ -42,8 +40,11 @@ export class CarpoolService {
       city: carpool['carpoolDepartureCity'],
       nbPlaces: carpool['nbPlaces'],
       eventId: event.eventId
-
     }));
+  }
+
+  async getOldAdressesCarpoolOfUser(): Promise<String[]> {
+    return (await this.httpService.getAll<String>(config.URL + "/carpool/getOldAdresses"));
   }
 
 }
