@@ -82,12 +82,12 @@ export class HomeComponent implements AfterViewInit, OnInit {
   async ngOnInit() {
     this.initToken();
     await this.initCurrentUser();
-    /*if (this.currentUser === null || this.currentUser === undefined) {
+    if (this.currentUser === null || this.currentUser === undefined) {
       this.authenticatedUserService.loadCurrentUser().then(async () => {
         await this.initCurrentUser();
         window.location.reload();
       });
-    }*/
+    }
   }
 
   async ngAfterViewInit() {
@@ -194,9 +194,20 @@ export class HomeComponent implements AfterViewInit, OnInit {
         this.eventParticipants = await this.eventService.unregisterToEvent(event.eventId);
         this.events = await this.eventService.getAvailableEvents();
         this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
+        await this.unsubscribeUserToEventCarpools(event);
         //TODO désinscrire de tous les covoiturages de l'événement
         this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
         this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
+      }
+    });
+  }
+
+  async unsubscribeUserToEventCarpools(event: EventModel) {
+    this.eventCarpools = await this.getCarpoolsOfEvent(event);
+    console.log(this.eventCarpools)
+    this.eventCarpools.forEach((eventCarpool) => {
+      if(this.currentUserParticipateToCarpools.get(eventCarpool.carpoolId)) {
+        this.unsubscribeToCarpool(eventCarpool);
       }
     });
   }
@@ -208,20 +219,24 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
   }
 
-  async unsubscribeToCarpool(carpool: CarpoolModel, e: Event) {
+  async unsubscribeToCarpoolConfirm(carpool: CarpoolModel, e: Event) {
     this.confirmationService.confirm({
       target: e.target,
       message: 'Voulez-vous vraiment vous désinscrire du covoiturage ?',
       icon: 'pi pi-users',
       accept: async () => {
-        this.carpoolParticipants = await this.carpoolService.unregisterToCarpool(carpool.carpoolId);
-        this.eventCarpools = await this.getCarpoolsOfEvent(this.visibleEvent);
-        this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
-        this.visibleCarpool = this.eventCarpools.find(event => event.carpoolId === carpool.carpoolId);
-        this.currentUserParticipateToCarpool = false;
+        await this.unsubscribeToCarpool(carpool);
         this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
       }
     });
+  }
+
+  async unsubscribeToCarpool(carpool: CarpoolModel) {
+    this.carpoolParticipants = await this.carpoolService.unregisterToCarpool(carpool.carpoolId);
+    this.eventCarpools = await this.getCarpoolsOfEvent(this.visibleEvent);
+    this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
+    this.visibleCarpool = this.eventCarpools.find(event => event.carpoolId === carpool.carpoolId);
+    this.currentUserParticipateToCarpool = false;
   }
 
   //TODO vérifier que c'est faisable avec des fonctions de js

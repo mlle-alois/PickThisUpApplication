@@ -130,7 +130,7 @@
                 [style]="{'margin-left': '.5em'}"></p-button>
               <p-button
                 *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToCarpools.get(carpool.carpoolId)"
-                label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpool(carpool, $event)"
+                label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpoolConfirm(carpool, $event)"
                 icon="pi pi-check" styleClass="p-button-danger"
                 [style]="{'margin-left': '.5em'}"></p-button>
             </div>
@@ -197,7 +197,7 @@
     <p-button
       *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToCarpools.get(visibleCarpool.carpoolId)
       && visibleCarpool.conductorId !== currentUser.mail"
-      label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpool(visibleCarpool, $event)"
+      label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpoolConfirm(visibleCarpool, $event)"
       icon="pi pi-check" styleClass="p-button-danger"
       [style]="{'margin-left': '.5em'}"></p-button>
   </ng-template>
