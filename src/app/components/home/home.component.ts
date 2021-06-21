@@ -63,8 +63,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
   ];
 
   registerForm: FormGroup;
-  message: any;
-  loading = "";
   selectedEvent: EventModel;
 
   constructor(private router: Router,
@@ -118,6 +116,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.eventParticipants = await this.getParticipantsOfEvent(event);
     this.eventCarpools = await this.getCarpoolsOfEvent(event);
     this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
+    this.eventPictures = [];
     this.eventPictures = await this.getPicturesOfEvent(event);
   }
 
