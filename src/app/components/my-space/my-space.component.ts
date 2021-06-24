@@ -12,6 +12,7 @@ import {UserService} from "../../services/user.service";
   templateUrl: './my-space.component.html',
   styleUrls: ['./my-space.component.css']
 })
+
 export class MySpaceComponent implements OnInit, AfterViewInit {
   token: string;
   currentUser: UserModel;

@@ -19,7 +19,7 @@ export class EventService {
   }
 
   async getAvailableEvents(): Promise<EventModel[]> {
-    return (await this.httpService.getAll<EventModel>(config.URL + "/event"))
+    return (await this.httpService.getAll<EventModel>(config.URL + '/event'))
       .map(function (event) {
         event.dateHourStart = new MyDate(event.dateHourStart);
         event.dateHourEnd = new MyDate(event.dateHourEnd);
@@ -29,7 +29,32 @@ export class EventService {
   }
 
   async getParticipantsEvents(eventId: number): Promise<UserModel[]> {
-    return (await this.httpService.getAll<UserModel>(config.URL + "/event/getParticipants/" + eventId));
+    return (await this.httpService.getAll<UserModel>(config.URL + '/event/getParticipants/' + eventId));
+  }
+  async getPastEventsFromUser(): Promise<EventModel[]> {
+    return (await this.httpService.getAll<EventModel>(config.URL + '/event/getPastEventsByUser')).map(function (event) {
+      event.dateHourStart = new MyDate(event.dateHourStart);
+      event.dateHourEnd = new MyDate(event.dateHourEnd);
+      event.dateHourCreation = new MyDate(event.dateHourCreation);
+      return event;
+    });
+  }
+
+  async getFuturEventsFromUser(): Promise<EventModel[]> {
+    return (await this.httpService.getAll<EventModel>(config.URL + '/event/getFutureEventsByUser')).map(function (event) {
+      event.dateHourStart = new MyDate(event.dateHourStart);
+      event.dateHourEnd = new MyDate(event.dateHourEnd);
+      event.dateHourCreation = new MyDate(event.dateHourCreation);
+      return event;
+    });
+  }
+  async getCurrentEventsFromUser(): Promise<EventModel[]> {
+    return (await this.httpService.getAll<EventModel>(config.URL + '/event/getActualEventsByUser')).map(function (event) {
+      event.dateHourStart = new MyDate(event.dateHourStart);
+      event.dateHourEnd = new MyDate(event.dateHourEnd);
+      event.dateHourCreation = new MyDate(event.dateHourCreation);
+      return event;
+    });
   }
 
   async registerToEvent(eventId: number): Promise<UserModel[]> {
@@ -37,7 +62,7 @@ export class EventService {
   }
 
   async unregisterToEvent(eventId: number): Promise<UserModel[]> {
-    return (await this.httpService.delete<UserModel>(config.URL + "/event/unregister/" + eventId));
+    return (await this.httpService.delete<UserModel>(config.URL + '/event/unregister/' + eventId));
   }
 
   async createEvent(event: EventModel, zone: ZoneModel): Promise<EventModel> {
