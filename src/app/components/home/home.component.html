@@ -26,13 +26,13 @@
             <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
                       (click)="onEventDetailClicked(event)"></p-button>
             <p-button
-              *ngIf="event.dateHourStart > currentTimestamp && event.eventRemainingPlaces > 0 &&
+              *ngIf="event.dateHourEnd > currentTimestamp && event.eventRemainingPlaces > 0 &&
               !currentUserParticipateToEvents.get(event.eventId) && currentUser.mail !== event.creatorId"
               label="Participer" (onClick)="participateToEvent(event)"
               icon="pi pi-check" styleClass="p-button-success"
               [style]="{'margin-left': '.5em'}"></p-button>
             <p-button
-              *ngIf="event.dateHourStart > currentTimestamp && currentUserParticipateToEvents.get(event.eventId)"
+              *ngIf="event.dateHourEnd > currentTimestamp && currentUserParticipateToEvents.get(event.eventId)"
               label="Se désinscrire" (onClick)="unsubscribeToEvent(event)"
               icon="pi pi-check" styleClass="p-button-danger"
               [style]="{'margin-left': '.5em'}"></p-button>

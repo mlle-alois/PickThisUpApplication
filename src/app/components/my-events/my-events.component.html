@@ -1,1 +1,143 @@
-<p>my-events works!</p>
+<!-- region Tous les événements-->
+<div class="p-d-flex">
+  <!-- <div class="col-md-6 col-sm-6 ml-auto mr-auto margin-tp">-->
+
+  <div class="p-mr-4">
+    <h3 style="visibility: hidden"> M</h3>
+    <h3> Mes evenements passés</h3>
+    <div *ngIf="events.length === 0" style="text-align: center"><p>Il n'y a aucun événement à venir.</p></div>
+    <div *ngFor="let event of pastEvents">
+      <p-card header="CleanWalk {{event.eventTitle}} à {{event.zone.zoneCity.toUpperCase()}}"
+              subheader="Détritus à {{event.zone.zoneCity}}, il faut faire quelque chose !"
+              [style]="event.dateHourStart > currentTimestamp ? {width: '3Ovw'} : {width: '3Ovw', backgroundColor: '#EAEAE9'}"
+              styleClass="p-card-shadow"
+      >
+        <img alt="{{event.eventTitle}} image" src="assets/pictures/{{event.picture.mediaPath}}"
+             class="event-picture">
+        <div>
+          <img src="assets/map-marker-alt-solid.svg" alt="" class="icon"/>
+          <p class="bold-text">{{event.zone.zoneStreet}} <br/>{{event.zone.zoneCity}} {{event.zone.zoneZipcode}}
+          </p>
+        </div>
+        <p style="font-size: 12px;">Du <span class="bold-text">{{event.dateHourStart.toStringDate()}}</span><br/>
+          Jusqu'au <span class="bold-text">{{event.dateHourEnd.toStringDate()}}</span></p>
+        <div style="text-align: right" *ngIf="event.dateHourStart > currentTimestamp">
+          <span class="bold-text">{{event.eventRemainingPlaces}}</span> places restantes
+        </div>
+        <ng-template pTemplate="footer">
+          <div *ngIf="currentUserParticipateToEvents">
+            <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
+            ></p-button>
+            <p-button
+              *ngIf="event.dateHourStart > currentTimestamp && event.eventRemainingPlaces > 0 &&
+               !currentUserParticipateToEvents.get(event.eventId) && currentUser.mail !== event.creatorId"
+              label="Participer"
+              icon="pi pi-check" styleClass="p-button-success"
+              [style]="{'margin-left': '.5em'}"></p-button>
+            <p-button
+              *ngIf="event.dateHourStart > currentTimestamp && currentUserParticipateToEvents.get(event.eventId)"
+              label="Se désinscrire"
+              icon="pi pi-check" styleClass="p-button-danger"
+              [style]="{'margin-left': '.5em'}"></p-button>
+          </div>
+        </ng-template>
+      </p-card>
+      <br/>
+    </div>
+  </div>
+
+      <div class="p-mr-4">
+        <h3 style="visibility: hidden"> M</h3>
+        <h3> Mes evenements en cours</h3>
+        <div *ngIf="events.length === 0" style="text-align: center"><p>Il n'y a aucun événement à venir.</p></div>
+        <div *ngFor="let event of currentEvents">
+          <p-card header="CleanWalk {{event.eventTitle}} à {{event.zone.zoneCity.toUpperCase()}}"
+                  subheader="Détritus à {{event.zone.zoneCity}}, il faut faire quelque chose !"
+                  [style]="event.dateHourStart > currentTimestamp ? {width: '3Ovw'} : {width: '3Ovw', backgroundColor: '#EAEAE9'}"
+                  styleClass="p-card-shadow"
+          >
+            <img alt="{{event.eventTitle}} image" src="assets/pictures/{{event.picture.mediaPath}}"
+                 class="event-picture">
+            <div>
+              <img src="assets/map-marker-alt-solid.svg" alt="" class="icon"/>
+              <p class="bold-text">{{event.zone.zoneStreet}} <br/>{{event.zone.zoneCity}} {{event.zone.zoneZipcode}}
+              </p>
+            </div>
+            <p style="font-size: 12px;">Du <span class="bold-text">{{event.dateHourStart.toStringDate()}}</span><br/>
+              Jusqu'au <span class="bold-text">{{event.dateHourEnd.toStringDate()}}</span></p>
+            <div style="text-align: right" *ngIf="event.dateHourStart > currentTimestamp">
+              <span class="bold-text">{{event.eventRemainingPlaces}}</span> places restantes
+            </div>
+            <ng-template pTemplate="footer">
+              <div *ngIf="currentUserParticipateToEvents">
+                <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
+                ></p-button>
+                <p-button
+                  *ngIf="event.dateHourStart > currentTimestamp && event.eventRemainingPlaces > 0 &&
+               !currentUserParticipateToEvents.get(event.eventId) && currentUser.mail !== event.creatorId"
+                  label="Participer"
+                  icon="pi pi-check" styleClass="p-button-success"
+                  [style]="{'margin-left': '.5em'}"></p-button>
+                <p-button
+                  *ngIf="event.dateHourStart > currentTimestamp && currentUserParticipateToEvents.get(event.eventId)"
+                  label="Se désinscrire"
+                  icon="pi pi-check" styleClass="p-button-danger"
+                  [style]="{'margin-left': '.5em'}"></p-button>
+              </div>
+            </ng-template>
+          </p-card>
+          <br/>
+        </div>
+      </div>
+
+  <!-- futur events -->
+       <div class="p-mr-4">
+        <h3 style="visibility: hidden"> M</h3>
+        <h3> Mes evenements futurs</h3>
+        <div *ngIf="events.length === 0" style="text-align: center"><p>Il n'y a aucun événement à venir.</p></div>
+        <div *ngFor="let event of futureEvents">
+          <p-card header="CleanWalk {{event.eventTitle}} à {{event.zone.zoneCity.toUpperCase()}}"
+                  subheader="Détritus à {{event.zone.zoneCity}}, il faut faire quelque chose !"
+                  [style]="event.dateHourStart > currentTimestamp ? {width: '3Ovw'} : {width: '3Ovw', backgroundColor: '#EAEAE9'}"
+                  styleClass="p-card-shadow"
+          >
+            <img alt="{{event.eventTitle}} image" src="assets/pictures/{{event.picture.mediaPath}}"
+                 class="event-picture">
+            <div>
+              <img src="assets/map-marker-alt-solid.svg" alt="" class="icon"/>
+              <p class="bold-text">{{event.zone.zoneStreet}} <br/>{{event.zone.zoneCity}} {{event.zone.zoneZipcode}}
+              </p>
+            </div>
+            <p style="font-size: 12px;">Du <span class="bold-text">{{event.dateHourStart.toStringDate()}}</span><br/>
+              Jusqu'au <span class="bold-text">{{event.dateHourEnd.toStringDate()}}</span></p>
+            <div style="text-align: right" *ngIf="event.dateHourStart > currentTimestamp">
+              <span class="bold-text">{{event.eventRemainingPlaces}}</span> places restantes
+            </div>
+            <ng-template pTemplate="footer">
+              <div *ngIf="currentUserParticipateToEvents">
+                <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
+                ></p-button>
+                <p-button
+                  *ngIf="event.dateHourStart > currentTimestamp && event.eventRemainingPlaces > 0 &&
+               !currentUserParticipateToEvents.get(event.eventId) && currentUser.mail !== event.creatorId"
+                  label="Participer"
+                  icon="pi pi-check" styleClass="p-button-success"
+                  [style]="{'margin-left': '.5em'}"></p-button>
+                <p-button
+                  *ngIf="event.dateHourStart > currentTimestamp && currentUserParticipateToEvents.get(event.eventId)"
+                  label="Se désinscrire"
+                  icon="pi pi-check" styleClass="p-button-danger"
+                  [style]="{'margin-left': '.5em'}"></p-button>
+              </div>
+            </ng-template>
+          </p-card>
+          <br/>
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+  <!-- endregion-->
