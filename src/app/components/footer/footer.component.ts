@@ -1,4 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {UserModel} from "../../models/user.model";
+import {AuthenticatedUserService} from "../../services/authenticated-user.service";
 
 @Component({
   selector: 'app-footer',
@@ -8,10 +10,22 @@ import {Component, Input, OnInit} from '@angular/core';
 export class FooterComponent implements OnInit {
 
   @Input() token: string;
+  currentUser: UserModel;
 
-  constructor() { }
+  constructor(private authenticatedUserService: AuthenticatedUserService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.initCurrentUser();
+    if (this.currentUser === null || this.currentUser === undefined) {
+      this.authenticatedUserService.loadCurrentUser().then(async () => {
+        await this.initCurrentUser();
+        window.location.reload();
+      });
+    }
+  }
+
+  async initCurrentUser() {
+    this.currentUser = await this.authenticatedUserService.getCurrentUser();
   }
 
 }

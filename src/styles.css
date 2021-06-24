@@ -43,10 +43,15 @@
   font-weight: bold;
 }
 
-.event-picture {
+.card-picture {
   float: left;
   height: 180px;
   margin-right: 15px;
+}
+
+.profile-picture {
+  height: 180px;
+  margin: 15px;
 }
 
 .home-menu {

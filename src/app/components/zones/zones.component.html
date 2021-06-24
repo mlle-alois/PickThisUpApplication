@@ -4,7 +4,7 @@
 
     <h2>Signalements</h2>
 
-    <div *ngIf="zones.length === 0" style="text-align: center"><p>Il n'y a aucun événement à venir.</p></div>
+    <div *ngIf="zones.length === 0" style="text-align: center"><p>Il n'y a aucune zone de signalée.</p></div>
     <div *ngFor="let zone of zones">
       <p-card header="Signalement à {{zone.zoneCity.toUpperCase()}}"
               subheader="Signalement à {{zone.zoneCity}}, il faut créer un événement pour ce lieu !"
