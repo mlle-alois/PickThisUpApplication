@@ -71,7 +71,7 @@
           </p>
         </div>
         <p style="font-size: 12px;">Du <span class="bold-text">{{visibleEvent.dateHourStart.toStringDate()}}</span><br/>
-          Jusqu'au <span class="bold-text">{{visibleEvent.dateHourEnd.toStringDate()}}</span></p>
+          Jusqu'au <span class="bold-text">{{visibleEvent.dateHourStart.toStringDate()}}</span></p>
         <div style="text-align: right"
              *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleEvent.eventRemainingPlaces > 0">
           <span class="bold-text">{{visibleEvent.eventRemainingPlaces}}</span> places restantes
