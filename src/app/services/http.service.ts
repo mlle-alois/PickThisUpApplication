@@ -79,7 +79,37 @@ export class HttpService {
     );
   }
 
-  post<T>(url: string, body?: any): Promise<T[]> {
+  post<T>(url: string, body?: any): Promise<T> {
+    return new Promise((resolve, reject) => this.httpClient.post(url,body ? body : {}, {
+        headers: {
+          'Authorization': `Bearer ${this.authenticatedUserService.getToken()}`,
+          'content-type': 'application/json'
+        },
+        responseType: 'json',
+        observe: 'response'
+      })
+        .subscribe(
+          (data) => {
+            if (data.status === 204) {
+              resolve;
+            } else if (data.body) {
+              resolve(data.body as T);
+            } else {
+              reject;
+            }
+          },
+          (error) => {
+            if (error.status === 401 || error.status === 403) {
+              this.authenticatedUserService.redirectToAuthentication();
+            } else {
+              reject(error);
+            }
+          }
+        )
+    );
+  }
+
+  postMultiRes<T>(url: string, body?: any): Promise<T[]> {
     return new Promise((resolve, reject) => this.httpClient.post(url,body ? body : {}, {
         headers: {
           'Authorization': `Bearer ${this.authenticatedUserService.getToken()}`,
@@ -113,7 +143,37 @@ export class HttpService {
     );
   }
 
-  put<T>(url: string, body?: any): Promise<T[]> {
+  put<T>(url: string, body?: any): Promise<T> {
+    return new Promise((resolve, reject) => this.httpClient.put(url,body ? body : {}, {
+        headers: {
+          'Authorization': `Bearer ${this.authenticatedUserService.getToken()}`,
+          'content-type': 'application/json'
+        },
+        responseType: 'json',
+        observe: 'response'
+      })
+        .subscribe(
+          (data) => {
+            if (data.status === 204) {
+              resolve;
+            } else if (data.body) {
+              resolve(data.body as T);
+            } else {
+              reject;
+            }
+          },
+          (error) => {
+            if (error.status === 401 || error.status === 403) {
+              this.authenticatedUserService.redirectToAuthentication();
+            } else {
+              reject(error);
+            }
+          }
+        )
+    );
+  }
+
+  putMultiRes<T>(url: string, body?: any): Promise<T[]> {
     return new Promise((resolve, reject) => this.httpClient.put(url,body ? body : {}, {
         headers: {
           'Authorization': `Bearer ${this.authenticatedUserService.getToken()}`,

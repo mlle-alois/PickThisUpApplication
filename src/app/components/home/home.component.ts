@@ -10,6 +10,8 @@ import {CarpoolModel} from "../../models/carpool.model";
 import {CarpoolService} from "../../services/carpool.service";
 import {MediaModel} from "../../models/media.model";
 import {ZoneService} from "../../services/zone.service";
+import {ConfirmationService, MessageService} from "primeng/api";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-home',
@@ -38,6 +40,13 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   eventPictures: MediaModel[];
 
+  oldAdresses = [];
+  carpoolStreet: string = "";
+  carpoolZipcode: string = "";
+  carpoolCity: string = "";
+
+  isProposeCarpool = false;
+
   responsiveOptions: any[] = [
     {
       breakpoint: '1024px',
@@ -53,18 +62,30 @@ export class HomeComponent implements AfterViewInit, OnInit {
     }
   ];
 
+  registerForm: FormGroup;
+  selectedEvent: EventModel;
+
   constructor(private router: Router,
+              private formBuilder: FormBuilder,
               private route: ActivatedRoute,
               private authenticatedUserService: AuthenticatedUserService,
               private eventService: EventService,
               private carpoolService: CarpoolService,
-              private zoneService: ZoneService) {
+              private zoneService: ZoneService,
+              private confirmationService: ConfirmationService,
+              private messageService: MessageService) {
+    this.registerForm = this.formBuilder.group({
+      'carpoolDepartureStreet': ['', Validators.required],
+      'carpoolDepartureCity': ['', Validators.required],
+      'carpoolDepartureZipcode': ['', [Validators.pattern('[0-9]{5}'), Validators.required]],
+      'nbPlaces': ['', [Validators.pattern('[1-9]{1}[0-9]*'), Validators.required]]
+    });
   }
 
   async ngOnInit() {
     this.initToken();
     await this.initCurrentUser();
-    if(this.currentUser === null || this.currentUser === undefined) {
+    if (this.currentUser === null || this.currentUser === undefined) {
       this.authenticatedUserService.loadCurrentUser().then(async () => {
         await this.initCurrentUser();
         window.location.reload();
@@ -95,6 +116,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.eventParticipants = await this.getParticipantsOfEvent(event);
     this.eventCarpools = await this.getCarpoolsOfEvent(event);
     this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
+    this.eventPictures = [];
     this.eventPictures = await this.getPicturesOfEvent(event);
   }
 
@@ -132,19 +154,70 @@ export class HomeComponent implements AfterViewInit, OnInit {
       });
   }
 
+  async proposeCarpool(event: EventModel, e: Event) {
+    this.confirmationService.confirm({
+      target: e.target,
+      message: 'Voulez-vous proposer un covoiturage pour cet événement ?',
+      icon: 'pi pi-users',
+      accept: async () => {
+        this.selectedEvent = event;
+        if(this.oldAdresses.length === 0) {
+          (await this.carpoolService.getOldAdressesCarpoolOfUser()).forEach((adress) => {
+            this.oldAdresses.push({adressString: adress['street'] + " " + adress['zipcode'] + " " + adress['city'], adress: adress})
+          });
+        }
+        this.isProposeCarpool = true;
+      },
+      reject: async () => {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Pas de covoiturage proposé',
+          detail: 'Si vous changez d\'avis, il faudra vous désincrire de l\'événement et vous réinscrire'
+        });
+        await this.participateToEvent(event);
+      }
+    });
+  }
+
+  async createCarpool() {
+    this.carpoolService.proposeCarpool(this.registerForm.value, this.selectedEvent);
+    this.messageService.add({severity: 'info', summary: 'Créé', detail: 'Covoiturage proposé'});
+    this.isProposeCarpool = false;
+    await this.participateToEvent(this.selectedEvent);
+  }
+
   async participateToEvent(event: EventModel) {
-    //TODO traitement de création de covoiturage (popup etc...)
     this.eventParticipants = await this.eventService.registerToEvent(event.eventId);
     this.events = await this.eventService.getAvailableEvents();
     this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
     this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
+    this.messageService.add({severity: 'info', summary: 'Inscrit', detail: 'Inscription validée'});
   }
 
-  async unsubscribeToEvent(event: EventModel) {
-    this.eventParticipants = await this.eventService.unregisterToEvent(event.eventId);
-    this.events = await this.eventService.getAvailableEvents();
-    this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
-    this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
+  async unsubscribeToEvent(event: EventModel, e: Event) {
+    this.confirmationService.confirm({
+      target: e.target,
+      message: 'Voulez-vous vraiment vous désinscrire de l\'événement ?',
+      icon: 'pi pi-users',
+      accept: async () => {
+        this.eventParticipants = await this.eventService.unregisterToEvent(event.eventId);
+        this.events = await this.eventService.getAvailableEvents();
+        this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
+        await this.unsubscribeUserToEventCarpools(event);
+        //TODO désinscrire de tous les covoiturages de l'événement
+        this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
+        this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
+      }
+    });
+  }
+
+  async unsubscribeUserToEventCarpools(event: EventModel) {
+    this.eventCarpools = await this.getCarpoolsOfEvent(event);
+    this.eventCarpools.forEach((eventCarpool) => {
+      if(this.currentUserParticipateToCarpools.get(eventCarpool.carpoolId)) {
+        this.unsubscribeToCarpool(eventCarpool);
+      }
+    });
   }
 
   async participateToCarpool(carpool: CarpoolModel) {
@@ -152,6 +225,18 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.eventCarpools = await this.getCarpoolsOfEvent(this.visibleEvent);
     this.visibleCarpool = this.eventCarpools.find(event => event.carpoolId === carpool.carpoolId);
     this.currentUserParticipateToCarpools = await this.setCurrentUserParticipateToCarpools(this.eventCarpools);
+  }
+
+  async unsubscribeToCarpoolConfirm(carpool: CarpoolModel, e: Event) {
+    this.confirmationService.confirm({
+      target: e.target,
+      message: 'Voulez-vous vraiment vous désinscrire du covoiturage ?',
+      icon: 'pi pi-users',
+      accept: async () => {
+        await this.unsubscribeToCarpool(carpool);
+        this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
+      }
+    });
   }
 
   async unsubscribeToCarpool(carpool: CarpoolModel) {
@@ -186,6 +271,10 @@ export class HomeComponent implements AfterViewInit, OnInit {
   async setCurrentUserParticipateToCarpools(carpools: CarpoolModel[]): Promise<Map<number, boolean>> {
     const currentUserParticipateToCarpools = new Map();
     for (let i = 0; i < carpools.length; i += 1) {
+      if(carpools[i].conductorId === this.currentUser.mail) {
+        this.currentUserParticipateToCarpool = true;
+        continue;
+      }
       const participants = await this.getParticipantsOfCarpool(carpools[i]);
       let j;
       for (j = 0; j < participants.length; j += 1) {
@@ -201,5 +290,11 @@ export class HomeComponent implements AfterViewInit, OnInit {
       }
     }
     return currentUserParticipateToCarpools;
+  }
+
+  onSelect(event: Event) {
+    this.carpoolStreet = event['value'].adress.street;
+    this.carpoolZipcode = event['value'].adress.zipcode;
+    this.carpoolCity = event['value'].adress.city;
   }
 }

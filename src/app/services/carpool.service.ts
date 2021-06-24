@@ -5,6 +5,7 @@ import {AuthenticatedUserService} from "./authenticated-user.service";
 import {HttpService} from "./http.service";
 import {CarpoolModel} from "../models/carpool.model";
 import {UserModel} from "../models/user.model";
+import {EventModel} from "../models/event.model";
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +26,25 @@ export class CarpoolService {
   }
 
   async registerToCarpool(carpoolId: number): Promise<UserModel[]> {
-    return (await this.httpService.post<UserModel>(config.URL + "/carpool/register/" + carpoolId));
+    return (await this.httpService.postMultiRes<UserModel>(config.URL + "/carpool/register/" + carpoolId));
   }
 
   async unregisterToCarpool(carpoolId: number): Promise<UserModel[]> {
     return (await this.httpService.delete<UserModel>(config.URL + "/carpool/unregister/" + carpoolId));
+  }
+
+  async proposeCarpool(carpool: CarpoolModel, event: EventModel): Promise<CarpoolModel> {
+    return (await this.httpService.post<CarpoolModel>(config.URL + "/carpool/add", {
+      street: carpool['carpoolDepartureStreet'],
+      zipcode: carpool['carpoolDepartureZipcode'],
+      city: carpool['carpoolDepartureCity'],
+      nbPlaces: carpool['nbPlaces'],
+      eventId: event.eventId
+    }));
+  }
+
+  async getOldAdressesCarpoolOfUser(): Promise<String[]> {
+    return (await this.httpService.getAll<String>(config.URL + "/carpool/getOldAdresses"));
   }
 
 }

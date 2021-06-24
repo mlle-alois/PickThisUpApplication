@@ -1,5 +1,4 @@
-import {UserModel} from "./user.model";
-import {StatusModel} from "./status.model";
+import {PollutionLevelModel} from "./pollution-level.model";
 
 export interface IZoneProps {
   zoneId: number;
@@ -7,8 +6,10 @@ export interface IZoneProps {
   zoneZipcode: string;
   zoneCity: string;
   zoneDescription: string;
-  signalman: number;
-  status: number;
+  signalmanId: string;
+  statusId: number;
+  pollutionLevelId: number;
+  pollutionLevel?: PollutionLevelModel;
 }
 
 export class ZoneModel implements IZoneProps {
@@ -17,8 +18,10 @@ export class ZoneModel implements IZoneProps {
   zoneZipcode: string;
   zoneCity: string;
   zoneDescription: string;
-  signalman: number;
-  status: number;
+  signalmanId: string;
+  statusId: number;
+  pollutionLevelId: number;
+  pollutionLevel?: PollutionLevelModel;
 
   constructor(properties: IZoneProps) {
     this.zoneId = properties.zoneId;
@@ -26,7 +29,9 @@ export class ZoneModel implements IZoneProps {
     this.zoneZipcode = properties.zoneZipcode;
     this.zoneCity = properties.zoneCity;
     this.zoneDescription = properties.zoneDescription;
-    this.signalman = properties.signalman;
-    this.status = properties.status;
+    this.signalmanId = properties.signalmanId;
+    this.statusId = properties.statusId;
+    this.pollutionLevelId = properties.pollutionLevelId;
+    this.pollutionLevel = properties.pollutionLevel;
   }
 }

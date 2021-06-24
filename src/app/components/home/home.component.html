@@ -1,3 +1,7 @@
+<p-toast></p-toast>
+
+<p-confirmPopup></p-confirmPopup>
+
 <!-- region Tous les événements-->
 <div class="container">
   <div class="col-md-6 col-sm-6 ml-auto mr-auto margin-tp">
@@ -10,7 +14,7 @@
               subheader="Détritus à {{event.zone.zoneCity}}, il faut faire quelque chose !"
               [style]="event.dateHourStart > currentTimestamp ? {width: '50vw'} : {width: '50vw', backgroundColor: '#EAEAE9'}"
               styleClass="p-card-shadow">
-        <img alt="{{event.eventTitle}} image" src="assets/pictures/{{event.picture.mediaPath}}" class="event-picture">
+        <img alt="{{event.eventTitle}} image" src="assets/pictures/{{event.picture.mediaPath}}" class="card-picture">
         <div>
           <img src="assets/map-marker-alt-solid.svg" alt="" class="icon"/>
           <p class="bold-text">{{event.zone.zoneStreet}} <br/>{{event.zone.zoneCity}} {{event.zone.zoneZipcode}}
@@ -28,12 +32,12 @@
             <p-button
               *ngIf="event.dateHourEnd > currentTimestamp && event.eventRemainingPlaces > 0 &&
               !currentUserParticipateToEvents.get(event.eventId) && currentUser.mail !== event.creatorId"
-              label="Participer" (onClick)="participateToEvent(event)"
+              label="Participer" (onClick)="proposeCarpool(event, $event)"
               icon="pi pi-check" styleClass="p-button-success"
               [style]="{'margin-left': '.5em'}"></p-button>
             <p-button
-              *ngIf="event.dateHourEnd > currentTimestamp && currentUserParticipateToEvents.get(event.eventId)"
-              label="Se désinscrire" (onClick)="unsubscribeToEvent(event)"
+              *ngIf="event.dateHourStart > currentTimestamp && currentUserParticipateToEvents.get(event.eventId)"
+              label="Se désinscrire" (onClick)="unsubscribeToEvent(event, $event)"
               icon="pi pi-check" styleClass="p-button-danger"
               [style]="{'margin-left': '.5em'}"></p-button>
           </div>
@@ -126,7 +130,7 @@
                 [style]="{'margin-left': '.5em'}"></p-button>
               <p-button
                 *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToCarpools.get(carpool.carpoolId)"
-                label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpool(carpool)"
+                label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpoolConfirm(carpool, $event)"
                 icon="pi pi-check" styleClass="p-button-danger"
                 [style]="{'margin-left': '.5em'}"></p-button>
             </div>
@@ -139,12 +143,12 @@
     <p-button
       *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleEvent.eventRemainingPlaces > 0 &&
       !currentUserParticipateToEvents.get(visibleEvent.eventId) && currentUser.mail !== visibleEvent.creatorId"
-      label="Participer à l'événement" (onClick)="participateToEvent(visibleEvent)"
+      label="Participer à l'événement" (onClick)="proposeCarpool(visibleEvent, $event)"
       icon="pi pi-check" styleClass="p-button-success"
       [style]="{'margin-left': '.5em'}"></p-button>
     <p-button
       *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToEvents.get(visibleEvent.eventId)"
-      label="Se désinscrire de l'événement" (onClick)="unsubscribeToEvent(visibleEvent)"
+      label="Se désinscrire de l'événement" (onClick)="unsubscribeToEvent(visibleEvent, $event)"
       icon="pi pi-check" styleClass="p-button-danger"
       [style]="{'margin-left': '.5em'}"></p-button>
   </ng-template>
@@ -185,15 +189,80 @@
     <p-button
       *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleCarpool.carpoolRemainingPlaces > 0 &&
               !currentUserParticipateToCarpools.get(visibleCarpool.carpoolId) && !currentUserParticipateToCarpool &&
-              currentUser.mail !== visibleCarpool.conductorId && currentUserParticipateToEvents.get(visibleEvent.eventId)"
+              currentUser.mail !== visibleCarpool.conductorId && currentUserParticipateToEvents.get(visibleEvent.eventId)
+              && visibleCarpool.conductorId !== currentUser.mail"
       label="Participer au covoiturage" (onClick)="participateToCarpool(visibleCarpool)"
       icon="pi pi-check" styleClass="p-button-success"
       [style]="{'margin-left': '.5em'}"></p-button>
     <p-button
-      *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToCarpools.get(visibleCarpool.carpoolId)"
-      label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpool(visibleCarpool)"
+      *ngIf="visibleEvent.dateHourStart > currentTimestamp && currentUserParticipateToCarpools.get(visibleCarpool.carpoolId)
+      && visibleCarpool.conductorId !== currentUser.mail"
+      label="Se désinscrire du covoiturage" (onClick)="unsubscribeToCarpoolConfirm(visibleCarpool, $event)"
       icon="pi pi-check" styleClass="p-button-danger"
       [style]="{'margin-left': '.5em'}"></p-button>
   </ng-template>
+</p-dialog>
+<!-- endregion-->
+
+<!-- region Propose Carpool-->
+<p-dialog [(visible)]="isProposeCarpool"
+          header="Proposer un covoiturage"
+          [style]="{width: '80vw'}">
+  <div class="card card-body">
+    <form [formGroup]="registerForm" (ngSubmit)="createCarpool()">
+      <fieldset class="form-group">
+        <label>Adresse existante</label>
+        <br/>
+        <p-dropdown [options]="oldAdresses" optionLabel="adressString" (onChange)="onSelect($event)"
+                    placeholder="Adresse existante"></p-dropdown>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <label>Adresse</label>
+        <input type="text" placeholder="Adresse" [(ngModel)]="carpoolStreet" class="form-control" formControlName="carpoolDepartureStreet" required>
+        <span
+          *ngIf="!registerForm.controls.carpoolDepartureStreet.valid && registerForm.controls.carpoolDepartureStreet.errors['required'] && registerForm.controls.carpoolDepartureStreet.touched"
+          class="help-block">Adresse obligatoire</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <label>Code postal</label>
+        <input type="text" placeholder="Code postal" [(ngModel)]="carpoolZipcode" class="form-control" formControlName="carpoolDepartureZipcode"
+               maxlength="5"
+               required>
+        <span
+          *ngIf="!registerForm.controls.carpoolDepartureZipcode.valid && registerForm.controls.carpoolDepartureZipcode.errors['required'] && registerForm.controls.carpoolDepartureZipcode.touched"
+          class="help-block">Code postal obligatoire</span>
+        <span
+          *ngIf="!registerForm.controls.carpoolDepartureZipcode.valid && registerForm.controls.carpoolDepartureZipcode.errors['pattern'] && !registerForm.controls.carpoolDepartureZipcode.errors['required']"
+          class="help-block">Veuillez entrer un code postal valide</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <label>Ville</label>
+        <input type="text" placeholder="Ville" [(ngModel)]="carpoolCity" class="form-control" formControlName="carpoolDepartureCity" required>
+        <span
+          *ngIf="!registerForm.controls.carpoolDepartureCity.valid && registerForm.controls.carpoolDepartureCity.errors['required'] && registerForm.controls.carpoolDepartureCity.touched"
+          class="help-block">Ville obligatoire</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <label>Nombre de places (hors conducteur)</label>
+        <input type="text" placeholder="Nombre de places" class="form-control" formControlName="nbPlaces" maxlength="2"
+               required>
+        <span
+          *ngIf="!registerForm.controls.nbPlaces.valid && registerForm.controls.nbPlaces.errors['required'] && registerForm.controls.nbPlaces.touched"
+          class="help-block">Nombre de places obligatoire</span>
+        <span
+          *ngIf="!registerForm.controls.nbPlaces.valid && registerForm.controls.nbPlaces.errors['pattern'] && !registerForm.controls.nbPlaces.errors['required']"
+          class="help-block">Veuillez entrer un nombre de places valide</span>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <button pButton type="submit" label="Proposer le covoiturage" class="p-button-secondary"
+                [disabled]="!registerForm.valid"></button>
+      </fieldset>
+    </form>
+  </div>
 </p-dialog>
 <!-- endregion-->
