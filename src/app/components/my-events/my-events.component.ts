@@ -18,11 +18,9 @@ import {DateUtils} from '../../utils/DateUtils';
 })
 export class MyEventsComponent implements OnInit,AfterViewInit {
 
-
   token: string;
   currentUser: UserModel;
 
-  events: EventModel[] = [];
   pastEvents: EventModel[] = [];
   futureEvents: EventModel[] = [];
   currentEvents: EventModel[] = [];
@@ -31,17 +29,29 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
   isEventDetailVisible = false;
   visibleEvent: EventModel;
   eventParticipants: UserModel[];
-  currentUserParticipateToEvents: Map<number, boolean>;
 
   eventCarpools: CarpoolModel[];
   carpoolParticipants: UserModel[];
-  currentUserParticipateToCarpools: Map<number, boolean>;
-  currentUserParticipateToCarpool = false;
 
   isCarpoolDetailVisible = false;
   visibleCarpool: CarpoolModel;
 
   eventPictures: MediaModel[];
+
+  responsiveOptions: any[] = [
+    {
+      breakpoint: '1024px',
+      numVisible: 5
+    },
+    {
+      breakpoint: '768px',
+      numVisible: 3
+    },
+    {
+      breakpoint: '560px',
+      numVisible: 1
+    }
+  ];
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -56,17 +66,15 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
     await this.initCurrentUser();
   }
 
-
   async ngAfterViewInit() {
     if (!this.authenticatedUserService.isAuthenticated()) {
       this.authenticatedUserService.redirectToAuthentication();
     }
-    this.events = await this.eventService.getAvailableEvents();
     this.pastEvents = await this.eventService.getPastEventsFromUser();
     this.futureEvents = await this.eventService.getFuturEventsFromUser();
     this.currentEvents = await this.eventService.getCurrentEventsFromUser();
+    console.log(this.futureEvents)
     this.currentTimestamp = DateUtils.getCurrentDate();
-    this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
   }
 
   initToken() {
@@ -91,6 +99,21 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
       });
   }
 
+  async onCarpoolDetailClicked(carpool: CarpoolModel): Promise<void> {
+    this.isCarpoolDetailVisible = true;
+    this.visibleCarpool = carpool;
+    this.carpoolParticipants = await this.getParticipantsOfCarpool(carpool);
+  }
+
+  async onEventDetailClicked(event: EventModel): Promise<void> {
+    this.isEventDetailVisible = true;
+    this.visibleEvent = event;
+    this.eventParticipants = await this.getParticipantsOfEvent(event);
+    this.eventCarpools = await this.getCarpoolsOfEvent(event);
+    this.eventPictures = [];
+    this.eventPictures = await this.getPicturesOfEvent(event);
+  }
+
   getCarpoolsOfEvent(event: EventModel): Promise<CarpoolModel[]> {
     return this.carpoolService.getCarpoolsEvent(event.eventId)
       .then(function (carpools) {
@@ -104,30 +127,5 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
         return pictures;
       });
   }
-  async setCurrentUserParticipateToEvents(events: EventModel[]): Promise<Map<number, boolean>> {
-    const currentUserParticipateToEvent = new Map();
-    for (let i = 0; i < events.length; i += 1) {
-      const participants = await this.getParticipantsOfEvent(events[i]);
-      let j;
-      for (j = 0; j < participants.length; j += 1) {
-        if (participants[j].mail === this.currentUser.mail) {
-          break;
-        }
-      }
-      if (j < participants.length) {
-        currentUserParticipateToEvent.set(events[i].eventId, true);
-      } else {
-        currentUserParticipateToEvent.set(events[i].eventId, false);
-      }
-    }
-    return currentUserParticipateToEvent;
-  }
-
- /* getPastEventofCurrentUser(): Promise<UserModel[]> {
-    return this.eventService.getPastEventsFromUser()
-      .then( (event) => {
-        return this.events;
-      });
-  }*/
 
 }
