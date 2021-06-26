@@ -5,15 +5,12 @@ import {HttpService} from "./http.service";
 import {ZoneModel} from "../models/zone.model";
 import {MediaModel} from "../models/media.model";
 import {PollutionLevel} from "../enum/pollution-level";
+import{status} from '../enum/status';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ZoneService {
-  private readonly validated: number = 4;
-  private readonly waiting: number = 5;
-  private readonly refused: number = 6;
-
   constructor(private httpClient: HttpClient,
               private httpService: HttpService) {
   }
@@ -29,13 +26,13 @@ export class ZoneService {
     return (await this.httpService.getAll<ZoneModel>(config.URL + '/zone/my-zones'));
   }
   async getRefusedZonesByUser(): Promise<ZoneModel[]> {
-    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === this.refused));
+    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === status.refused));
   }
   async getWaitingZonesByUser(): Promise<ZoneModel[]> {
-    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === this.waiting));
+    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === status.waiting));
   }
   async getValidatedZonesByUser(): Promise<ZoneModel[]> {
-    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === this.validated));
+    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === status.validated));
   }
 
 
