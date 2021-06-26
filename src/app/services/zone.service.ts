@@ -10,18 +10,34 @@ import {PollutionLevel} from "../enum/pollution-level";
   providedIn: 'root'
 })
 export class ZoneService {
+  private readonly validated: number = 4;
+  private readonly waiting: number = 5;
+  private readonly refused: number = 6;
 
   constructor(private httpClient: HttpClient,
               private httpService: HttpService) {
   }
 
   async getPicturesZone(zoneId: number): Promise<MediaModel[]> {
-    return (await this.httpService.getAll<MediaModel>(config.URL + "/zone/get-pictures/" + zoneId));
+    return (await this.httpService.getAll<MediaModel>(config.URL + '/zone/get-pictures/' + zoneId));
   }
 
   async getAvailableZones(): Promise<ZoneModel[]> {
-    return (await this.httpService.getAll<ZoneModel>(config.URL + "/zone/"));
+    return (await this.httpService.getAll<ZoneModel>(config.URL + '/zone/'));
   }
+  async getZonesByUser(): Promise<ZoneModel[]> {
+    return (await this.httpService.getAll<ZoneModel>(config.URL + '/zone/my-zones'));
+  }
+  async getRefusedZonesByUser(): Promise<ZoneModel[]> {
+    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === this.refused));
+  }
+  async getWaitingZonesByUser(): Promise<ZoneModel[]> {
+    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === this.waiting));
+  }
+  async getValidatedZonesByUser(): Promise<ZoneModel[]> {
+    return (await (await this.getZonesByUser()).filter((zone) => zone.statusId === this.validated));
+  }
+
 
   async signalZone(zone: ZoneModel): Promise<ZoneModel> {
     let pollutionLevel: PollutionLevel;
