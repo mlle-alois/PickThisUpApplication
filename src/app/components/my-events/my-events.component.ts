@@ -86,9 +86,6 @@ export class MyEventsComponent implements OnInit, AfterViewInit {
     this.pastEvents = await this.eventService.getPastEventsFromUser();
     this.futureEvents = await this.eventService.getFuturEventsFromUser();
     this.currentEvents = await this.eventService.getCurrentEventsFromUser();
-    console.log(this.pastEvents);
-    console.log(this.currentEvents);
-    console.log(this.futureEvents);
 
     this.pastEventsValidated = this.pastEvents.filter((event) => event.statusId === this.validated);
     this.currentEventsValidated = this.currentEvents.filter((event) => event.statusId === this.validated);
