@@ -1,24 +1,3 @@
-
-/*.container{
-  display:flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: right;
-}*/
-
-
-/*::ng-deep .p-card .p-card-body {
-  margin-left:  -20.5rem;
-  display:flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: left;
-}*/
-/*::ng-deep .p-card {
-  margin-left:  -20.5rem;
-  display:flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-/*  justify-content: right;
- style:md4 sm6;
-}*/
+.p-mr-4 {
+  flex-grow: 1;
+}

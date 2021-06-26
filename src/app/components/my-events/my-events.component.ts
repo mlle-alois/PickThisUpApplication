@@ -72,8 +72,8 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
     }
     this.pastEvents = await this.eventService.getPastEventsFromUser();
     this.futureEvents = await this.eventService.getFuturEventsFromUser();
+    console.log(this.futureEvents);
     this.currentEvents = await this.eventService.getCurrentEventsFromUser();
-    console.log(this.futureEvents)
     this.currentTimestamp = DateUtils.getCurrentDate();
   }
 

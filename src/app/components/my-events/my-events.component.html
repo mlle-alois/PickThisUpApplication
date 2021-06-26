@@ -1,7 +1,6 @@
 <p-toast></p-toast>
 <!-- region Mes événements-->
 <div class="p-d-flex">
-  <div class="col-md-6 col-sm-6 ml-auto mr-auto margin-tp">
     <div class="p-mr-4">
       <h2> Mes evenements passés</h2>
       <div *ngIf="pastEvents.length === 0" style="text-align: center"><p>Il n'y a aucun événement passés.</p></div>
@@ -89,9 +88,8 @@
         <br/>
       </div>
     </div>
-  </div>
-</div>
-<!-- endregion-->
+    </div>
+    <!-- endregion-->
 
 <!-- region Détails Event-->
 <p-dialog *ngIf="visibleEvent" [(visible)]="isEventDetailVisible"
