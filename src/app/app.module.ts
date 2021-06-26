@@ -33,7 +33,7 @@ import {ListboxModule} from "primeng/listbox";
 import {DropdownModule} from "primeng/dropdown";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService, MessageService} from "primeng/api";
-
+import {TabViewModule} from 'primeng/tabview';
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,7 +71,8 @@ import {ConfirmationService, MessageService} from "primeng/api";
     CalendarModule,
     ListboxModule,
     DropdownModule,
-    ConfirmPopupModule
+    ConfirmPopupModule,
+    TabViewModule
   ],
   providers: [
     HttpClient,

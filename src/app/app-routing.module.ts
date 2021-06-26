@@ -2,10 +2,10 @@ import {Input, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import {ZonesComponent} from "./components/zones/zones.component";
-import {MyZonesComponent} from "./components/my-zones/my-zones.component";
-import {MyEventsComponent} from "./components/my-events/my-events.component";
-import {MySpaceComponent} from "./components/my-space/my-space.component";
+import {ZonesComponent} from './components/zones/zones.component';
+import {MyZonesComponent} from './components/my-zones/my-zones.component';
+import {MyEventsComponent} from './components/my-events/my-events.component';
+import {MySpaceComponent} from './components/my-space/my-space.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },

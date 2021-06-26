@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 import {UserModel} from '../../models/user.model';
 import {EventModel} from '../../models/event.model';
 import {MyDate} from '../../utils/MyDate';
@@ -16,15 +16,27 @@ import {DateUtils} from '../../utils/DateUtils';
   templateUrl: './my-events.component.html',
   styleUrls: ['./my-events.component.css']
 })
-export class MyEventsComponent implements OnInit,AfterViewInit {
+export class MyEventsComponent implements OnInit, AfterViewInit {
 
   token: string;
   currentUser: UserModel;
+  private readonly validated: number = 4;
+  private readonly waiting: number = 5;
+  private readonly refused: number = 6;
 
   pastEvents: EventModel[] = [];
   futureEvents: EventModel[] = [];
   currentEvents: EventModel[] = [];
   currentTimestamp: MyDate;
+  pastEventsValidated: EventModel[] = [];
+  futureEventsValidated: EventModel[] = [];
+  currentEventsValidated: EventModel[] = [];
+  pastEventsWaiting: EventModel[] = [];
+  futureEventsWaiting: EventModel[] = [];
+  currentEventsWaiting: EventModel[] = [];
+  pastEventsRefused: EventModel[] = [];
+  futureEventsRefused: EventModel[] = [];
+  currentEventsRefused: EventModel[] = [];
 
   isEventDetailVisible = false;
   visibleEvent: EventModel;
@@ -58,7 +70,8 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
               private authenticatedUserService: AuthenticatedUserService,
               private eventService: EventService,
               private carpoolService: CarpoolService,
-              private zoneService: ZoneService) { }
+              private zoneService: ZoneService) {
+  }
 
 
   async ngOnInit() {
@@ -72,8 +85,23 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
     }
     this.pastEvents = await this.eventService.getPastEventsFromUser();
     this.futureEvents = await this.eventService.getFuturEventsFromUser();
-    console.log(this.futureEvents);
     this.currentEvents = await this.eventService.getCurrentEventsFromUser();
+    console.log(this.pastEvents);
+    console.log(this.currentEvents);
+    console.log(this.futureEvents);
+
+    this.pastEventsValidated = this.pastEvents.filter((event) => event.statusId === this.validated);
+    this.currentEventsValidated = this.currentEvents.filter((event) => event.statusId === this.validated);
+    this.futureEventsValidated = this.futureEvents.filter((event) => event.statusId === this.validated);
+
+    this.pastEventsWaiting = this.pastEvents.filter((event) => event.statusId === this.waiting);
+    this.currentEventsWaiting = this.currentEvents.filter((event) => event.statusId === this.waiting);
+    this.futureEventsWaiting = this.futureEvents.filter((event) => event.statusId === this.waiting);
+
+    this.pastEventsRefused = this.pastEvents.filter((event) => event.statusId === this.refused);
+    this.currentEventsRefused = this.currentEvents.filter((event) => event.statusId === this.refused);
+    this.futureEventsRefused = this.futureEvents.filter((event) => event.statusId === this.refused);
+
     this.currentTimestamp = DateUtils.getCurrentDate();
   }
 
@@ -87,14 +115,14 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
 
   getParticipantsOfEvent(event: EventModel): Promise<UserModel[]> {
     return this.eventService.getParticipantsEvents(event.eventId)
-      .then(function (users) {
+      .then(function(users) {
         return users;
       });
   }
 
   getParticipantsOfCarpool(carpool: CarpoolModel): Promise<UserModel[]> {
     return this.carpoolService.getCarpoolParticipants(carpool.carpoolId)
-      .then(function (users) {
+      .then(function(users) {
         return users;
       });
   }
@@ -116,14 +144,14 @@ export class MyEventsComponent implements OnInit,AfterViewInit {
 
   getCarpoolsOfEvent(event: EventModel): Promise<CarpoolModel[]> {
     return this.carpoolService.getCarpoolsEvent(event.eventId)
-      .then(function (carpools) {
+      .then(function(carpools) {
         return carpools;
       });
   }
 
   getPicturesOfEvent(event: EventModel): Promise<MediaModel[]> {
     return this.zoneService.getPicturesZone(event.zone.zoneId)
-      .then(function (pictures) {
+      .then(function(pictures) {
         return pictures;
       });
   }
