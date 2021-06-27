@@ -17,7 +17,7 @@
   <ng-template pTemplate="footer">
     <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
               (click)="onEventDetailClicked(event)"></p-button>
-    <p-button label="Modifier" icon="pi pi-plus" styleClass="p-button-warning" *ngIf="event.statusId === 5"
+    <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary" *ngIf="event.statusId === 5"
               (click)="onEventUpdateClicked(event)"></p-button>
   </ng-template>
 </p-card>
@@ -95,7 +95,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="footer">
-        <p-button label="Modifier" icon="pi pi-plus" styleClass="p-button-warning" *ngIf="visibleEvent.statusId === 5"
+        <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary" *ngIf="visibleEvent.statusId === 5"
                   (click)="onEventUpdateClicked(visibleEvent)"></p-button>
       </ng-template>
     </p-table>

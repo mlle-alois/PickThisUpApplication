@@ -1,11 +1,11 @@
 <p-toast></p-toast>
 <p-dialog [(visible)]="isUpdateEventClicked"
-          header="Créer un événement"
+          header="Modifier l'événement {{visibleEventValue.eventTitle}}"
           [style]="{width: '80vw'}">
   <div class="card card-body">
     <form [formGroup]="registerForm" (ngSubmit)="createEvent()">
       <fieldset class="form-group">
-        <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)"
+        <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)" [selectId]="selectedZoneAdress" [dataKey]="selectedZoneAdress"
                     placeholder="Lieu de l'événement" formControlName="zoneId"></p-dropdown>
         <br/>
         <span
@@ -60,7 +60,7 @@
       <fieldset class="form-group" *ngIf="selectedZonePictures">
         <label>Image de l'événement</label>
         <p-listbox [options]="selectedZonePictures" optionLabel="path" optionValue="pictureId"
-                   formControlName="eventPitureId" [checkbox]="true" [filter]="false" [multiple]="false">
+                   formControlName="eventPitureId" [filter]="false" [multiple]="false">
           <ng-template pTemplate="item" let-picture>
             <img src="assets/pictures/{{picture['path']}}" class="list-icon" alt="zone picture"/>
           </ng-template>
@@ -69,7 +69,7 @@
 
       <div style="text-align: right !important;">
         <fieldset class="form-group">
-          <button pButton type="submit" label="Créer l'événement" class="p-button-secondary"
+          <button pButton type="submit" label="Modifier l'événement" class="p-button-secondary"
                   [disabled]="!registerForm.valid"></button>
         </fieldset>
       </div>

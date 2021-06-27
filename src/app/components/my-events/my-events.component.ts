@@ -1,14 +1,10 @@
-import {Component, OnInit, AfterViewInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {UserModel} from '../../models/user.model';
 import {EventModel} from '../../models/event.model';
 import {MyDate} from '../../utils/MyDate';
-import {CarpoolModel} from '../../models/carpool.model';
-import {MediaModel} from '../../models/media.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticatedUserService} from '../../services/authenticated-user.service';
 import {EventService} from '../../services/event.service';
-import {CarpoolService} from '../../services/carpool.service';
-import {ZoneService} from '../../services/zone.service';
 import {DateUtils} from '../../utils/DateUtils';
 import {status} from '../../enum/status';
 
@@ -42,7 +38,6 @@ export class MyEventsComponent implements OnInit, AfterViewInit {
               private eventService: EventService) {
   }
 
-
   async ngOnInit() {
     this.initToken();
     await this.initCurrentUser();
@@ -52,6 +47,12 @@ export class MyEventsComponent implements OnInit, AfterViewInit {
     if (!this.authenticatedUserService.isAuthenticated()) {
       this.authenticatedUserService.redirectToAuthentication();
     }
+    this.initEvents();
+
+    this.currentTimestamp = DateUtils.getCurrentDate();
+  }
+
+  async initEvents() {
     this.pastEvents = await this.eventService.getPastEventsFromUser();
     this.futureEvents = await this.eventService.getFuturEventsFromUser();
     this.currentEvents = await this.eventService.getCurrentEventsFromUser();
@@ -67,8 +68,6 @@ export class MyEventsComponent implements OnInit, AfterViewInit {
     this.pastEventsRefused = this.pastEvents.filter((event) => event.statusId === status.refused);
     this.currentEventsRefused = this.currentEvents.filter((event) => event.statusId === status.refused);
     this.futureEventsRefused = this.futureEvents.filter((event) => event.statusId === status.refused);
-
-    this.currentTimestamp = DateUtils.getCurrentDate();
   }
 
   initToken() {

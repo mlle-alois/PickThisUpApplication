@@ -77,4 +77,16 @@ export class EventService {
     }));
   }
 
+  async updateEvent(event: EventModel, zone: ZoneModel, eventId: number): Promise<EventModel> {
+    return (await this.httpService.put<EventModel>(config.URL + "/event/update/" + eventId, {
+      title: event['eventTitle'],
+      description: event['eventDescription'],
+      dateHourStart: event['dateHourStart'],
+      dateHourEnd: event['dateHourEnd'],
+      maxNbPlaces: event['eventMaxNbPlaces'],
+      pictureId: event['eventPitureId'],
+      zoneId: zone.zoneId
+    }));
+  }
+
 }

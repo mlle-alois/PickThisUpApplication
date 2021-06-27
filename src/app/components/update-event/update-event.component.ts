@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ZoneModel} from "../../models/zone.model";
 import {EventService} from "../../services/event.service";
@@ -43,17 +43,17 @@ export class UpdateEventComponent implements OnInit {
   registerForm: FormGroup;
   loading = "";
 
-  availableZones: ZoneModel[];
+  availableZones: any[];
   zones = [];
   selectedZone: ZoneModel;
+  selectedZoneAdress: any;
   selectedZonePictures = [];
-  eventPicture: any;
 
-  constructor(private fb: FormBuilder,
+  constructor(private formBuilder: FormBuilder,
               private eventService: EventService,
               private zoneService: ZoneService,
               private messageService: MessageService) {
-    this.registerForm = this.fb.group({
+    this.registerForm = this.formBuilder.group({
       'zoneId': ['', Validators.required],
       'eventTitle': ['', Validators.required],
       'eventDescription': ['', Validators.required],
@@ -65,7 +65,17 @@ export class UpdateEventComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.selectedZone = this.visibleEventValue.zone;
+    this.selectedZoneAdress = this.selectedZone.zoneStreet + " " + this.selectedZone.zoneZipcode + " " + this.selectedZone.zoneCity;
     await this.initAvailableZones();
+    await this.getSelectedZonePictures(this.selectedZone);
+    this.registerForm.patchValue({zoneId: this.selectedZoneAdress});
+    this.registerForm.patchValue({eventTitle: this.visibleEventValue.eventTitle});
+    this.registerForm.patchValue({eventDescription: this.visibleEventValue.eventDescription});
+    this.registerForm.patchValue({dateHourStart: this.visibleEventValue.dateHourStart});
+    this.registerForm.patchValue({dateHourEnd: this.visibleEventValue.dateHourEnd});
+    this.registerForm.patchValue({eventMaxNbPlaces: this.visibleEventValue.eventMaxNbPlaces});
+    //TODO faire marcher la selection par défaut de l'image de l'événement
   }
 
   async initAvailableZones() {
@@ -73,7 +83,7 @@ export class UpdateEventComponent implements OnInit {
     this.availableZones.forEach((zone) => {
       this.zones.push({adress: zone.zoneStreet + " " + zone.zoneZipcode + " " + zone.zoneCity, zone: zone})
     });
-  }
+    }
 
   async createEvent() {
     this.loading = "chargement...";
@@ -87,10 +97,10 @@ export class UpdateEventComponent implements OnInit {
       this.loading = "";
       return;
     }
-    await this.eventService.createEvent(this.registerForm.value, this.selectedZone);
+    await this.eventService.updateEvent(this.registerForm.value, this.selectedZone, this.visibleEventValue.eventId);
     this.loading = "";
     this.isUpdateEventClickedChange.emit(false);
-    this.messageService.add({severity: 'info', summary: 'Créé', detail: 'L\'événement a été créé ! Il doit désormais être validé par notre équipe.'});
+    this.messageService.add({severity: 'info', summary: 'Modifié', detail: 'L\'événement a été modifié ! Il doit être validé par notre équipe.'});
   }
 
   filterItems(event) {
@@ -109,6 +119,10 @@ export class UpdateEventComponent implements OnInit {
 
   async onSelectZone(event) {
     this.selectedZone = event.value.zone;
+    this.getSelectedZonePictures(this.selectedZone);
+  }
+
+  async getSelectedZonePictures(zone: ZoneModel) {
     this.selectedZonePictures = (await this.zoneService.getPicturesZone(this.selectedZone.zoneId)).map(function (picture) {
       return {path: picture.mediaPath, pictureId: picture.mediaId};
     });
