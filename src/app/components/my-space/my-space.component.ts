@@ -84,7 +84,7 @@ export class MySpaceComponent implements OnInit, AfterViewInit {
   async updateUserInfos() {
     this.isUpdated = false;
     await this.userService.updateUser(this.registerForm.value);
-    this.messageService.add({severity: 'info', summary: 'Modifié', detail: 'Vos informations ont été modifiées'});
+    this.messageService.add({severity: 'success', summary: 'Modifié', detail: 'Vos informations ont été modifiées'});
     this.isUpdated = true;
     this.isUpdateUserClicked = false;
     this.authenticatedUserService.loadCurrentUser();

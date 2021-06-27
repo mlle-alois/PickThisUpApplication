@@ -82,7 +82,7 @@ export class AddEventComponent implements OnInit {
     await this.eventService.createEvent(this.registerForm.value, this.selectedZone);
     this.isCreated = true;
     this.isAddEventClickedChange.emit(false);
-    this.messageService.add({severity: 'info', summary: 'Créé', detail: 'L\'événement a été créé ! Il doit désormais être validé par notre équipe.'});
+    this.messageService.add({severity: 'success', summary: 'Créé', detail: 'L\'événement a été créé ! Il doit désormais être validé par notre équipe.'});
   }
 
   filterItems(event) {

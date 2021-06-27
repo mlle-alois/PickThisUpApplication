@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>
 <p-card header="CleanWalk {{event.eventTitle}} à {{event.zone.zoneCity.toUpperCase()}}"
         subheader="Détritus à {{event.zone.zoneCity}}, il faut faire quelque chose !"
         styleClass="p-card-shadow"
@@ -20,6 +22,9 @@
     <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary"
               *ngIf="event.statusId === 5 && event.creatorId === currentUser.mail"
               (click)="onEventUpdateClicked(event)"></p-button>
+    <p-button label="Supprimer" icon="pi pi-trash" styleClass="p-button-danger"
+              *ngIf="event.statusId === 5 && event.creatorId === currentUser.mail"
+              (click)="onEventDeleteClicked(event, $event)"></p-button>
   </ng-template>
 </p-card>
 <!-- region Détails Event-->
@@ -99,6 +104,9 @@
         <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary"
                   *ngIf="visibleEvent.statusId === 5"
                   (click)="onEventUpdateClicked(visibleEvent)"></p-button>
+        <p-button label="Supprimer" icon="pi pi-trash" styleClass="p-button-danger"
+                  *ngIf="event.statusId === 5 && event.creatorId === currentUser.mail"
+                  (click)="onEventDeleteClicked(event, $event)"></p-button>
       </ng-template>
     </p-table>
   </div>
@@ -139,5 +147,5 @@
 <!-- endregion-->
 
 <app-update-event *ngIf="isUpdateEventClickedValue" [isUpdateEventClicked]="isUpdateEventClickedValue"
-                  [visibleEvent]="visibleEvent" (isEventWasUpdated)="eventWasUpdated()"
+                  [visibleEvent]="visibleEvent" (isEventWasUpdated)="eventsHasChanged()"
                   (isUpdateEventClickedChange)="isUpdateEventChange($event)"></app-update-event>

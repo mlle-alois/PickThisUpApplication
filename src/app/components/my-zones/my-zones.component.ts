@@ -5,6 +5,8 @@ import {MediaModel} from '../../models/media.model';
 import {Router} from '@angular/router';
 import {AuthenticatedUserService} from '../../services/authenticated-user.service';
 import {ZoneService} from '../../services/zone.service';
+import {EventModel} from "../../models/event.model";
+import {ConfirmationService, MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-my-zones',
@@ -47,6 +49,8 @@ export class MyZonesComponent implements OnInit, AfterViewInit {
 
   constructor(private router: Router,
               private authenticatedUserService: AuthenticatedUserService,
+              private confirmationService: ConfirmationService,
+              private messageService: MessageService,
               private zoneService : ZoneService) {}
 
   async ngOnInit() {
@@ -58,9 +62,7 @@ export class MyZonesComponent implements OnInit, AfterViewInit {
         window.location.reload();
       });
     }
-    this.waitingZones = await this.zoneService.getWaitingZonesByUser();
-    this.refusedZones = await this.zoneService.getRefusedZonesByUser();
-    this.validatedZones = await this.zoneService.getValidatedZonesByUser();
+    await this.initZones();
     this.isLoadedData = true;
   }
 
@@ -72,6 +74,12 @@ export class MyZonesComponent implements OnInit, AfterViewInit {
 
   initToken() {
     this.token = this.authenticatedUserService.getToken();
+  }
+
+  async initZones() {
+    this.waitingZones = await this.zoneService.getWaitingZonesByUser();
+    this.refusedZones = await this.zoneService.getRefusedZonesByUser();
+    this.validatedZones = await this.zoneService.getValidatedZonesByUser();
   }
 
   async initCurrentUser() {
@@ -90,5 +98,18 @@ export class MyZonesComponent implements OnInit, AfterViewInit {
       .then(function (pictures) {
         return pictures;
       });
+  }
+
+  async onZoneDeleteClicked(zone: ZoneModel, e: Event): Promise<void> {
+    this.confirmationService.confirm({
+      target: e.target,
+      message: 'Voulez-vous vraiment supprimer cette zone ?',
+      icon: 'pi pi-users',
+      accept: async () => {
+        await this.zoneService.deleteZone(zone.zoneId);
+        this.messageService.add({severity: 'success', summary: 'Supprimé', detail: 'Suppression effectuée'});
+        await this.initZones();
+      }
+    });
   }
 }

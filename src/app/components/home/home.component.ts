@@ -186,7 +186,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   async createCarpool() {
     this.isProposed = false;
     this.carpoolService.proposeCarpool(this.registerForm.value, this.selectedEvent);
-    this.messageService.add({severity: 'info', summary: 'Créé', detail: 'Covoiturage proposé'});
+    this.messageService.add({severity: 'success', summary: 'Créé', detail: 'Covoiturage proposé'});
     this.isProposeCarpool = false;
     await this.participateToEvent(this.selectedEvent);
   }
@@ -196,7 +196,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.events = await this.eventService.getAvailableEvents();
     this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
     this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
-    this.messageService.add({severity: 'info', summary: 'Inscrit', detail: 'Inscription validée'});
+    this.messageService.add({severity: 'success', summary: 'Inscrit', detail: 'Inscription validée'});
     this.isProposed = true;
   }
 
@@ -212,7 +212,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
         await this.unsubscribeUserToEventCarpools(event);
         //TODO désinscrire de tous les covoiturages de l'événement
         this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
-        this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
+        this.messageService.add({severity: 'success', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
       }
     });
   }
@@ -240,7 +240,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
       icon: 'pi pi-users',
       accept: async () => {
         await this.unsubscribeToCarpool(carpool);
-        this.messageService.add({severity: 'info', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
+        this.messageService.add({severity: 'success', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
       }
     });
   }

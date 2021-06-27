@@ -8,6 +8,7 @@ import {UserModel} from "../../models/user.model";
 import {CarpoolService} from "../../services/carpool.service";
 import {ZoneService} from "../../services/zone.service";
 import {EventService} from "../../services/event.service";
+import {ConfirmationService, MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-my-event',
@@ -37,7 +38,7 @@ export class MyEventComponent implements OnInit {
 
   eventPictures: MediaModel[];
 
-  @Output() isEventWasUpdated = new EventEmitter<void>();
+  @Output() isEventsHasChanged = new EventEmitter<void>();
 
   responsiveOptions: any[] = [
     {
@@ -56,8 +57,11 @@ export class MyEventComponent implements OnInit {
 
   constructor(
     private eventService: EventService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
     private carpoolService: CarpoolService,
-    private zoneService: ZoneService) { }
+    private zoneService: ZoneService) {
+  }
 
   ngOnInit(): void {
     this.currentTimestamp = DateUtils.getCurrentDate();
@@ -79,30 +83,43 @@ export class MyEventComponent implements OnInit {
     this.eventPictures = await this.getPicturesOfEvent(event);
   }
 
+  async onEventDeleteClicked(event: EventModel, e: Event): Promise<void> {
+    this.confirmationService.confirm({
+      target: e.target,
+      message: 'Voulez-vous vraiment supprimer cet événement ?',
+      icon: 'pi pi-users',
+      accept: async () => {
+        await this.eventService.deleteEvent(event.eventId);
+        this.messageService.add({severity: 'success', summary: 'Supprimé', detail: 'Suppression effectuée'});
+        this.eventsHasChanged();
+      }
+    });
+  }
+
   getCarpoolsOfEvent(event: EventModel): Promise<CarpoolModel[]> {
     return this.carpoolService.getCarpoolsEvent(event.eventId)
-      .then(function(carpools) {
+      .then(function (carpools) {
         return carpools;
       });
   }
 
   getPicturesOfEvent(event: EventModel): Promise<MediaModel[]> {
     return this.zoneService.getPicturesZone(event.zone.zoneId)
-      .then(function(pictures) {
+      .then(function (pictures) {
         return pictures;
       });
   }
 
   getParticipantsOfEvent(event: EventModel): Promise<UserModel[]> {
     return this.eventService.getParticipantsEvents(event.eventId)
-      .then(function(users) {
+      .then(function (users) {
         return users;
       });
   }
 
   getParticipantsOfCarpool(carpool: CarpoolModel): Promise<UserModel[]> {
     return this.carpoolService.getCarpoolParticipants(carpool.carpoolId)
-      .then(function(users) {
+      .then(function (users) {
         return users;
       });
   }
@@ -117,8 +134,8 @@ export class MyEventComponent implements OnInit {
     this.isUpdateEventClickedValue = event;
   }
 
-  eventWasUpdated() {
-    this.isEventWasUpdated.emit()
+  eventsHasChanged() {
+    this.isEventsHasChanged.emit()
   }
 
 }

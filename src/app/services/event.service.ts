@@ -29,7 +29,7 @@ export class EventService {
   }
 
   async getParticipantsEvents(eventId: number): Promise<UserModel[]> {
-    return (await this.httpService.getAll<UserModel>(config.URL + '/event/getParticipants/' + eventId));
+    return await this.httpService.getAll<UserModel>(config.URL + '/event/getParticipants/' + eventId);
   }
   async getPastEventsFromUser(): Promise<EventModel[]> {
     return (await this.httpService.getAll<EventModel>(config.URL + '/event/getPastEventsByUser')).map(function (event) {
@@ -58,11 +58,15 @@ export class EventService {
   }
 
   async registerToEvent(eventId: number): Promise<UserModel[]> {
-    return (await this.httpService.postMultiRes<UserModel>(config.URL + "/event/register/" + eventId));
+    return await this.httpService.postMultiRes<UserModel>(config.URL + "/event/register/" + eventId);
   }
 
   async unregisterToEvent(eventId: number): Promise<UserModel[]> {
-    return (await this.httpService.delete<UserModel>(config.URL + '/event/unregister/' + eventId));
+    return await this.httpService.deleteMultiRes<UserModel>(config.URL + '/event/unregister/' + eventId);
+  }
+
+  async deleteEvent(eventId: number): Promise<boolean> {
+    return await this.httpService.delete<boolean>(config.URL + '/event/delete/' + eventId);
   }
 
   async createEvent(event: EventModel, zone: ZoneModel): Promise<EventModel> {

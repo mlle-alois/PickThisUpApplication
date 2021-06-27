@@ -207,7 +207,35 @@ export class HttpService {
     );
   }
 
-  delete<T>(url: string): Promise<T[]> {
+  delete<T>(url: string): Promise<T> {
+    return new Promise((resolve, reject) => this.httpClient.delete(url, {
+        headers: {
+          'Authorization': `Bearer ${this.authenticatedUserService.getToken()}`,
+          'content-type': 'application/json'
+        },
+        responseType: 'json',
+        observe: 'response'
+      })
+        .subscribe(
+          (data) => {
+            if (data.body) {
+              resolve(data.body as T);
+            } else {
+              reject;
+            }
+          },
+          (error) => {
+            if (error.status === 401 || error.status === 403) {
+              this.authenticatedUserService.redirectToAuthentication();
+            } else {
+              reject(error);
+            }
+          }
+        )
+    );
+  }
+
+  deleteMultiRes<T>(url: string): Promise<T[]> {
     return new Promise((resolve, reject) => this.httpClient.delete(url, {
         headers: {
           'Authorization': `Bearer ${this.authenticatedUserService.getToken()}`,

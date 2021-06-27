@@ -30,7 +30,7 @@ export class CarpoolService {
   }
 
   async unregisterToCarpool(carpoolId: number): Promise<UserModel[]> {
-    return (await this.httpService.delete<UserModel>(config.URL + "/carpool/unregister/" + carpoolId));
+    return (await this.httpService.deleteMultiRes<UserModel>(config.URL + "/carpool/unregister/" + carpoolId));
   }
 
   async proposeCarpool(carpool: CarpoolModel, event: EventModel): Promise<CarpoolModel> {

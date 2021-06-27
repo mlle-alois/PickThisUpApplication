@@ -95,7 +95,7 @@ export class UpdateEventComponent implements OnInit {
     await this.eventService.updateEvent(this.registerForm.value, this.selectedZone, this.visibleEvent.eventId);
     this.isUpdated = true;
     this.isUpdateEventClickedChange.emit(false);
-    this.messageService.add({severity: 'info', summary: 'Modifié', detail: 'L\'événement a été modifié ! Il doit être validé par notre équipe.'});
+    this.messageService.add({severity: 'success', summary: 'Modifié', detail: 'L\'événement a été modifié ! Il doit être validé par notre équipe.'});
     this.isEventWasUpdated.emit();
   }
 
