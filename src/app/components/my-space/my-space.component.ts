@@ -3,7 +3,6 @@ import {UserModel} from "../../models/user.model";
 import {Router} from "@angular/router";
 import {AuthenticatedUserService} from "../../services/authenticated-user.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {DateUtils} from "../../utils/DateUtils";
 import {MessageService} from "primeng/api";
 import {UserService} from "../../services/user.service";
 
@@ -22,7 +21,9 @@ export class MySpaceComponent implements OnInit, AfterViewInit {
   registerForm: FormGroup;
   passwordMatched: boolean = false;
   confirmationPassword: string = "";
-  loading = "";
+  isUpdated = true;
+
+  isLoadedData: boolean;
 
   constructor(private router: Router,
               private authenticatedUserService: AuthenticatedUserService,
@@ -43,6 +44,7 @@ export class MySpaceComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.initToken();
     await this.initCurrentUser();
+    this.isLoadedData = true;
   }
 
   async ngAfterViewInit() {
@@ -80,10 +82,10 @@ export class MySpaceComponent implements OnInit, AfterViewInit {
   }
 
   async updateUserInfos() {
-    this.loading = "chargement...";
+    this.isUpdated = false;
     await this.userService.updateUser(this.registerForm.value);
     this.messageService.add({severity: 'info', summary: 'Modifié', detail: 'Vos informations ont été modifiées'});
-    this.loading = "";
+    this.isUpdated = true;
     this.isUpdateUserClicked = false;
     this.authenticatedUserService.loadCurrentUser();
   }

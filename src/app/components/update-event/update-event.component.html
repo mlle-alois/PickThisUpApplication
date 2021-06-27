@@ -1,11 +1,14 @@
 <p-toast></p-toast>
+
 <p-dialog [(visible)]="isUpdateEventClicked"
-          header="Modifier l'événement {{visibleEventValue.eventTitle}}"
+          header="Modifier l'événement {{visibleEvent.eventTitle}}"
           [style]="{width: '80vw'}">
-  <div class="card card-body">
+  <p-progressSpinner *ngIf="!isLoadedData"></p-progressSpinner>
+  <div *ngIf="isLoadedData" class="card card-body">
     <form [formGroup]="registerForm" (ngSubmit)="createEvent()">
       <fieldset class="form-group">
-        <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)" [selectId]="selectedZoneAdress" [dataKey]="selectedZoneAdress"
+        <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)"
+                    [selectId]="selectedZoneAdress" [dataKey]="selectedZoneAdress"
                     placeholder="Lieu de l'événement" formControlName="zoneId"></p-dropdown>
         <br/>
         <span
@@ -73,7 +76,7 @@
                   [disabled]="!registerForm.valid"></button>
         </fieldset>
       </div>
-      <p>{{loading}}</p>
+      <p-progressSpinner *ngIf="!isUpdated"></p-progressSpinner>
     </form>
   </div>
 </p-dialog>

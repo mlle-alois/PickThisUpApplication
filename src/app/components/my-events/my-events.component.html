@@ -1,6 +1,7 @@
 <p-toast></p-toast>
+<p-progressSpinner *ngIf="!isLoadedData"></p-progressSpinner>
 <!-- region Mes événements-->
-<p-tabView>
+<p-tabView *ngIf="isLoadedData">
   <p-tabPanel header="Validés">
     <div class="p-d-flex">
       <div class="p-mr-4">
@@ -8,7 +9,7 @@
         <div *ngIf="pastEventsValidated.length === 0" style="text-align: center"><p>Il n'y a aucun événement passés.</p>
         </div>
         <div *ngFor="let event of pastEventsValidated">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>
@@ -18,7 +19,7 @@
         <div *ngIf="currentEventsValidated.length === 0" style="text-align: center"><p>Il n'y a aucun événement en
           cours.</p></div>
         <div *ngFor="let event of currentEventsValidated">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>
@@ -29,7 +30,7 @@
         <div *ngIf="futureEventsValidated.length === 0" style="text-align: center"><p>Il n'y a aucun événement à
           venir.</p></div>
         <div *ngFor="let event of futureEventsValidated">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>
@@ -43,7 +44,7 @@
         <div *ngIf="pastEventsWaiting.length === 0" style="text-align: center"><p>Il n'y a aucun événement passés.</p>
         </div>
         <div *ngFor="let event of pastEventsWaiting">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>
@@ -53,7 +54,7 @@
         <div *ngIf="currentEventsWaiting.length === 0" style="text-align: center"><p>Il n'y a aucun événement en
           cours.</p></div>
         <div *ngFor="let event of currentEventsWaiting">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>
@@ -64,7 +65,7 @@
         <div *ngIf="futureEventsWaiting.length === 0" style="text-align: center"><p>Il n'y a aucun événement à
           venir.</p></div>
         <div *ngFor="let event of futureEventsWaiting">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>
@@ -79,7 +80,7 @@
         <div *ngIf="pastEventsRefused.length === 0" style="text-align: center"><p>Il n'y a aucun événement passés.</p>
         </div>
         <div *ngFor="let event of pastEventsRefused">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>
@@ -89,7 +90,7 @@
         <div *ngIf="currentEventsRefused.length === 0" style="text-align: center"><p>Il n'y a aucun événement en
           cours.</p></div>
         <div *ngFor="let event of currentEventsRefused">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>
@@ -100,7 +101,7 @@
         <div *ngIf="futureEventsRefused.length === 0" style="text-align: center"><p>Il n'y a aucun événement à
           venir.</p></div>
         <div *ngFor="let event of futureEventsRefused">
-          <app-my-event [event]="event"></app-my-event>
+          <app-my-event [event]="event" (isEventWasUpdated)="initEvents()" [currentUser]="currentUser"></app-my-event>
           <br/>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {UserModel} from '../../models/user.model';
 import {ZoneModel} from '../../models/zone.model';
 import {MediaModel} from '../../models/media.model';
@@ -11,7 +11,7 @@ import {ZoneService} from '../../services/zone.service';
   templateUrl: './my-zones.component.html',
   styleUrls: ['./my-zones.component.css']
 })
-export class MyZonesComponent implements OnInit {
+export class MyZonesComponent implements OnInit, AfterViewInit {
 
   token: string;
   currentUser: UserModel;
@@ -43,6 +43,8 @@ export class MyZonesComponent implements OnInit {
 
   selectedZone: ZoneModel;
 
+  isLoadedData: boolean;
+
   constructor(private router: Router,
               private authenticatedUserService: AuthenticatedUserService,
               private zoneService : ZoneService) {}
@@ -56,15 +58,16 @@ export class MyZonesComponent implements OnInit {
         window.location.reload();
       });
     }
+    this.waitingZones = await this.zoneService.getWaitingZonesByUser();
+    this.refusedZones = await this.zoneService.getRefusedZonesByUser();
+    this.validatedZones = await this.zoneService.getValidatedZonesByUser();
+    this.isLoadedData = true;
   }
 
   async ngAfterViewInit() {
     if (!this.authenticatedUserService.isAuthenticated()) {
       this.authenticatedUserService.redirectToAuthentication();
     }
-    this.waitingZones = await this.zoneService.getWaitingZonesByUser();
-    this.refusedZones = await this.zoneService.getRefusedZonesByUser();
-    this.validatedZones = await this.zoneService.getValidatedZonesByUser();
   }
 
   initToken() {

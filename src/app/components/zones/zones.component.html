@@ -1,5 +1,6 @@
 <!-- region Tous les événements-->
-<div class="container">
+<p-progressSpinner *ngIf="!isLoadedData"></p-progressSpinner>
+<div *ngIf="isLoadedData" class="container">
   <div class="col-md-6 col-sm-6 ml-auto mr-auto margin-tp">
 
     <h2>Signalements</h2>

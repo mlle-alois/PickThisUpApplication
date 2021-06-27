@@ -1,7 +1,8 @@
 <p-toast></p-toast>
+<p-progressSpinner *ngIf="!isLoadedData"></p-progressSpinner>
 
 <!-- region mon espace-->
-<div class="container">
+<div class="container" *ngIf="isLoadedData">
   <div class="col-md-6 col-sm-6 ml-auto mr-auto margin-tp">
 
     <h2>Mon espace</h2>
@@ -105,7 +106,7 @@
       <button pButton type="submit" label="Modifier mes informations" class="p-button-secondary"
               [disabled]=!registerForm.valid></button>
     </fieldset>
-    <p>{{loading}}</p>
+    <p-progressSpinner *ngIf="!isUpdated"></p-progressSpinner>
   </form>
 </p-dialog>
 <!-- endregion -->

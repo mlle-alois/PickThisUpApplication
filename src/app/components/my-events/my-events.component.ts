@@ -32,6 +32,8 @@ export class MyEventsComponent implements OnInit, AfterViewInit {
   futureEventsRefused: EventModel[] = [];
   currentEventsRefused: EventModel[] = [];
 
+  isLoadedData: boolean;
+
   constructor(private router: Router,
               private route: ActivatedRoute,
               private authenticatedUserService: AuthenticatedUserService,
@@ -41,15 +43,15 @@ export class MyEventsComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.initToken();
     await this.initCurrentUser();
+    await this.initEvents();
+    this.currentTimestamp = DateUtils.getCurrentDate();
+    this.isLoadedData = true;
   }
 
   async ngAfterViewInit() {
     if (!this.authenticatedUserService.isAuthenticated()) {
       this.authenticatedUserService.redirectToAuthentication();
     }
-    this.initEvents();
-
-    this.currentTimestamp = DateUtils.getCurrentDate();
   }
 
   async initEvents() {

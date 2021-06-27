@@ -65,6 +65,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
   registerForm: FormGroup;
   selectedEvent: EventModel;
 
+  isLoadedData: boolean;
+  isProposed = true;
+
   constructor(private router: Router,
               private formBuilder: FormBuilder,
               private route: ActivatedRoute,
@@ -91,15 +94,16 @@ export class HomeComponent implements AfterViewInit, OnInit {
         window.location.reload();
       });
     }
+    this.events = await this.eventService.getAvailableEvents();
+    this.currentTimestamp = DateUtils.getCurrentDate();
+    this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
+    this.isLoadedData = true;
   }
 
   async ngAfterViewInit() {
     if (!this.authenticatedUserService.isAuthenticated()) {
       this.authenticatedUserService.redirectToAuthentication();
     }
-    this.events = await this.eventService.getAvailableEvents();
-    this.currentTimestamp = DateUtils.getCurrentDate();
-    this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
   }
 
   initToken() {
@@ -180,6 +184,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   }
 
   async createCarpool() {
+    this.isProposed = false;
     this.carpoolService.proposeCarpool(this.registerForm.value, this.selectedEvent);
     this.messageService.add({severity: 'info', summary: 'Créé', detail: 'Covoiturage proposé'});
     this.isProposeCarpool = false;
@@ -192,6 +197,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
     this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
     this.messageService.add({severity: 'info', summary: 'Inscrit', detail: 'Inscription validée'});
+    this.isProposed = true;
   }
 
   async unsubscribeToEvent(event: EventModel, e: Event) {

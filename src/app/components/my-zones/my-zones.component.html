@@ -1,5 +1,6 @@
 <!-- region Tous les événements-->
-<div class="p-d-flex">
+<p-progressSpinner *ngIf="!isLoadedData"></p-progressSpinner>
+<div *ngIf="isLoadedData" class="p-d-flex">
   <div class="p-mr-4">
 
     <h2>Mes signalements validés</h2>

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {EventModel} from "../../models/event.model";
 import {MyDate} from "../../utils/MyDate";
 import {DateUtils} from "../../utils/DateUtils";
@@ -18,10 +18,15 @@ export class MyEventComponent implements OnInit {
 
   @Input() event: EventModel;
 
+  @Input() currentUser: UserModel;
+
+  isUpdateEventClickedValue: boolean;
+
+  visibleEvent: EventModel;
+
   currentTimestamp: MyDate;
 
   isEventDetailVisible = false;
-  visibleEvent: EventModel;
   eventParticipants: UserModel[];
 
   eventCarpools: CarpoolModel[];
@@ -32,7 +37,7 @@ export class MyEventComponent implements OnInit {
 
   eventPictures: MediaModel[];
 
-  isUpdateEventClicked = false;
+  @Output() isEventWasUpdated = new EventEmitter<void>();
 
   responsiveOptions: any[] = [
     {
@@ -48,6 +53,7 @@ export class MyEventComponent implements OnInit {
       numVisible: 1
     }
   ];
+
   constructor(
     private eventService: EventService,
     private carpoolService: CarpoolService,
@@ -67,7 +73,7 @@ export class MyEventComponent implements OnInit {
   }
 
   async onEventUpdateClicked(event: EventModel): Promise<void> {
-    this.isUpdateEventClicked = true;
+    this.isUpdateEventClickedValue = true;
     this.visibleEvent = event;
     this.eventPictures = [];
     this.eventPictures = await this.getPicturesOfEvent(event);
@@ -105,6 +111,14 @@ export class MyEventComponent implements OnInit {
     this.isCarpoolDetailVisible = true;
     this.visibleCarpool = carpool;
     this.carpoolParticipants = await this.getParticipantsOfCarpool(carpool);
+  }
+
+  async isUpdateEventChange(event: boolean) {
+    this.isUpdateEventClickedValue = event;
+  }
+
+  eventWasUpdated() {
+    this.isEventWasUpdated.emit()
   }
 
 }

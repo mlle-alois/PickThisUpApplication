@@ -2,7 +2,8 @@
 <p-dialog [(visible)]="isAddEventClicked"
           header="Créer un événement"
           [style]="{width: '80vw'}">
-  <div class="card card-body">
+  <p-progressSpinner *ngIf="!isLoadedData"></p-progressSpinner>
+  <div class="card card-body" *ngIf="isLoadedData" >
     <form [formGroup]="registerForm" (ngSubmit)="createEvent()">
       <fieldset class="form-group">
         <p-dropdown [options]="zones" optionLabel="adress" (onChange)="onSelectZone($event)"
@@ -73,7 +74,7 @@
                   [disabled]="!registerForm.valid"></button>
         </fieldset>
       </div>
-      <p>{{loading}}</p>
+      <p-progressSpinner *ngIf="!isCreated"></p-progressSpinner>
     </form>
   </div>
 </p-dialog>

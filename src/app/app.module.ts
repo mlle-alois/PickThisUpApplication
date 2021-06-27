@@ -36,6 +36,8 @@ import {ConfirmationService, MessageService} from "primeng/api";
 import {TabViewModule} from 'primeng/tabview';
 import { UpdateEventComponent } from './components/update-event/update-event.component';
 import { MyEventComponent } from './components/my-event/my-event.component';
+import {ProgressSpinnerModule} from "primeng/progressspinner";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,7 +78,8 @@ import { MyEventComponent } from './components/my-event/my-event.component';
     ListboxModule,
     DropdownModule,
     ConfirmPopupModule,
-    TabViewModule
+    TabViewModule,
+    ProgressSpinnerModule
   ],
   providers: [
     HttpClient,

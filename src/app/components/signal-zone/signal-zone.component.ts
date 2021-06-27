@@ -27,9 +27,11 @@ export class SignalZoneComponent implements OnInit {
   pollutionLevelItems: any[] = ['Faible', 'Moyen', 'Elevé'];
 
   registerForm: FormGroup;
-  loading = "";
+  isCreated = true;
 
   uploadedFiles: any[];
+
+  isLoadedData: boolean;
 
   constructor(private fb: FormBuilder,
               private zoneService: ZoneService,
@@ -45,13 +47,14 @@ export class SignalZoneComponent implements OnInit {
 
   ngOnInit(): void {
     this.uploadedFiles = [];
+    this.isLoadedData = true;
   }
 
   async signalZone() {
-    this.loading = "chargement...";
+    this.isCreated = false;
     if (this.uploadedFiles.length === 0) {
       this.messageService.add({severity: 'warn', summary: 'Conflit', detail: 'Veuillez saisir au moins 1 image.'});
-      this.loading = "";
+      this.isCreated = true;
       return;
     }
     const zone = await this.zoneService.signalZone(this.registerForm.value);
@@ -59,7 +62,7 @@ export class SignalZoneComponent implements OnInit {
       await this.zoneService.addPictureToZone(zone.zoneId, file.name);
       //TODO mettre les fichiers uploadés dans assets
     });
-    this.loading = "";
+    this.isCreated = true;
     this.isSignalZoneClickedChange.emit(false);
     this.messageService.add({severity: 'warn', summary: 'Signalé', detail: 'Lieu signalé avec succès ! Il doit maintenant être validé par notre équipe.'});
   }

@@ -39,6 +39,8 @@ export class ZonesComponent implements OnInit, AfterViewInit {
 
   selectedZone: ZoneModel;
 
+  isLoadedData: boolean;
+
   constructor(private router: Router,
               private authenticatedUserService: AuthenticatedUserService,
               private zoneService : ZoneService) {}
@@ -52,13 +54,14 @@ export class ZonesComponent implements OnInit, AfterViewInit {
         window.location.reload();
       });
     }
+    this.zones = await this.zoneService.getAvailableZones();
+    this.isLoadedData = true;
   }
 
   async ngAfterViewInit() {
     if (!this.authenticatedUserService.isAuthenticated()) {
       this.authenticatedUserService.redirectToAuthentication();
     }
-    this.zones = await this.zoneService.getAvailableZones();
   }
 
   initToken() {

@@ -17,7 +17,8 @@
   <ng-template pTemplate="footer">
     <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
               (click)="onEventDetailClicked(event)"></p-button>
-    <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary" *ngIf="event.statusId === 5"
+    <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary"
+              *ngIf="event.statusId === 5 && event.creatorId === currentUser.mail"
               (click)="onEventUpdateClicked(event)"></p-button>
   </ng-template>
 </p-card>
@@ -95,7 +96,8 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="footer">
-        <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary" *ngIf="visibleEvent.statusId === 5"
+        <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary"
+                  *ngIf="visibleEvent.statusId === 5"
                   (click)="onEventUpdateClicked(visibleEvent)"></p-button>
       </ng-template>
     </p-table>
@@ -136,5 +138,6 @@
 </p-dialog>
 <!-- endregion-->
 
-<app-update-event *ngIf="isUpdateEventClicked" [isUpdateEventClicked]="isUpdateEventClicked" [visibleEvent]="visibleEvent"
-                  (isUpdateEventClickedChange)="isUpdateEventClicked = $event" (visibleEventChange)="visibleEvent = $event"></app-update-event>
+<app-update-event *ngIf="isUpdateEventClickedValue" [isUpdateEventClicked]="isUpdateEventClickedValue"
+                  [visibleEvent]="visibleEvent" (isEventWasUpdated)="eventWasUpdated()"
+                  (isUpdateEventClickedChange)="isUpdateEventChange($event)"></app-update-event>

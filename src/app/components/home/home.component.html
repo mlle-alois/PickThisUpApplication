@@ -1,9 +1,10 @@
 <p-toast></p-toast>
+<p-progressSpinner *ngIf="!isLoadedData"></p-progressSpinner>
 
 <p-confirmPopup></p-confirmPopup>
 
 <!-- region Tous les événements-->
-<div class="container">
+<div class="container" *ngIf="isLoadedData">
   <div class="col-md-6 col-sm-6 ml-auto mr-auto margin-tp">
 
     <h2>Home</h2>
@@ -262,6 +263,7 @@
         <button pButton type="submit" label="Proposer le covoiturage" class="p-button-secondary"
                 [disabled]="!registerForm.valid"></button>
       </fieldset>
+      <p-progressSpinner *ngIf="!isProposed"></p-progressSpinner>
     </form>
   </div>
 </p-dialog>

@@ -2,7 +2,8 @@
 <p-dialog [(visible)]="isSignalZoneClicked"
           header="Signaler un lieu"
           [style]="{width: '80vw'}">
-  <div class="card card-body">
+  <p-progressSpinner *ngIf="!isLoadedData"></p-progressSpinner>
+  <div *ngIf="isLoadedData" class="card card-body">
     <form [formGroup]="registerForm" (ngSubmit)="signalZone()">
       <fieldset class="form-group">
         <input type="text" placeholder="Adresse" class="form-control" formControlName="zoneStreet" required>
@@ -59,7 +60,7 @@
                   [disabled]="!registerForm.valid"></button>
         </fieldset>
       </div>
-      <p>{{loading}}</p>
+      <p-progressSpinner *ngIf="!isCreated"></p-progressSpinner>
     </form>
   </div>
 </p-dialog>

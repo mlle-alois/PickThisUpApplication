@@ -30,13 +30,15 @@ export class AddEventComponent implements OnInit {
   pollutionLevelItems: any[] = ['Faible', 'Moyen', 'Elevé'];
 
   registerForm: FormGroup;
-  loading = "";
+  isCreated = true;
 
   availableZones: ZoneModel[];
   zones = [];
   selectedZone: ZoneModel;
   selectedZonePictures = [];
   eventPicture: any;
+
+  isLoadedData: boolean;
 
   constructor(private fb: FormBuilder,
               private eventService: EventService,
@@ -55,6 +57,7 @@ export class AddEventComponent implements OnInit {
 
   async ngOnInit() {
     await this.initAvailableZones();
+    this.isLoadedData = true;
   }
 
   async initAvailableZones() {
@@ -65,19 +68,19 @@ export class AddEventComponent implements OnInit {
   }
 
   async createEvent() {
-    this.loading = "chargement...";
+    this.isCreated = false;
     if(this.registerForm.value['dateHourStart'] >= this.registerForm.value['dateHourEnd']) {
       this.messageService.add({severity: 'warn', summary: 'Conflit', detail: 'Veuillez saisir une date de début précédant la date de fin'});
-      this.loading = "";
+      this.isCreated = true;
       return;
     }
     if(this.registerForm.value['dateHourStart'] <= DateUtils.getCurrentDate()) {
       this.messageService.add({severity: 'warn', summary: 'Conflit', detail: 'Veuillez saisir une date de début supérieure à la date actuelle'});
-      this.loading = "";
+      this.isCreated = true;
       return;
     }
     await this.eventService.createEvent(this.registerForm.value, this.selectedZone);
-    this.loading = "";
+    this.isCreated = true;
     this.isAddEventClickedChange.emit(false);
     this.messageService.add({severity: 'info', summary: 'Créé', detail: 'L\'événement a été créé ! Il doit désormais être validé par notre équipe.'});
   }
