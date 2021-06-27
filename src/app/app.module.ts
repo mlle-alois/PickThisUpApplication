@@ -34,6 +34,8 @@ import {DropdownModule} from "primeng/dropdown";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {TabViewModule} from 'primeng/tabview';
+import { UpdateEventComponent } from './components/update-event/update-event.component';
+import { MyEventComponent } from './components/my-event/my-event.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +49,9 @@ import {TabViewModule} from 'primeng/tabview';
     MyZonesComponent,
     ZonesComponent,
     AddEventComponent,
-    SignalZoneComponent
+    SignalZoneComponent,
+    UpdateEventComponent,
+    MyEventComponent
   ],
   imports: [
     BrowserModule,

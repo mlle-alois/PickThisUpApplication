@@ -36,39 +36,10 @@ export class MyEventsComponent implements OnInit, AfterViewInit {
   futureEventsRefused: EventModel[] = [];
   currentEventsRefused: EventModel[] = [];
 
-  isEventDetailVisible = false;
-  visibleEvent: EventModel;
-  eventParticipants: UserModel[];
-
-  eventCarpools: CarpoolModel[];
-  carpoolParticipants: UserModel[];
-
-  isCarpoolDetailVisible = false;
-  visibleCarpool: CarpoolModel;
-
-  eventPictures: MediaModel[];
-
-  responsiveOptions: any[] = [
-    {
-      breakpoint: '1024px',
-      numVisible: 5
-    },
-    {
-      breakpoint: '768px',
-      numVisible: 3
-    },
-    {
-      breakpoint: '560px',
-      numVisible: 1
-    }
-  ];
-
   constructor(private router: Router,
               private route: ActivatedRoute,
               private authenticatedUserService: AuthenticatedUserService,
-              private eventService: EventService,
-              private carpoolService: CarpoolService,
-              private zoneService: ZoneService) {
+              private eventService: EventService) {
   }
 
 
@@ -106,49 +77,6 @@ export class MyEventsComponent implements OnInit, AfterViewInit {
 
   async initCurrentUser() {
     this.currentUser = await this.authenticatedUserService.getCurrentUser();
-  }
-
-  getParticipantsOfEvent(event: EventModel): Promise<UserModel[]> {
-    return this.eventService.getParticipantsEvents(event.eventId)
-      .then(function(users) {
-        return users;
-      });
-  }
-
-  getParticipantsOfCarpool(carpool: CarpoolModel): Promise<UserModel[]> {
-    return this.carpoolService.getCarpoolParticipants(carpool.carpoolId)
-      .then(function(users) {
-        return users;
-      });
-  }
-
-  async onCarpoolDetailClicked(carpool: CarpoolModel): Promise<void> {
-    this.isCarpoolDetailVisible = true;
-    this.visibleCarpool = carpool;
-    this.carpoolParticipants = await this.getParticipantsOfCarpool(carpool);
-  }
-
-  async onEventDetailClicked(event: EventModel): Promise<void> {
-    this.isEventDetailVisible = true;
-    this.visibleEvent = event;
-    this.eventParticipants = await this.getParticipantsOfEvent(event);
-    this.eventCarpools = await this.getCarpoolsOfEvent(event);
-    this.eventPictures = [];
-    this.eventPictures = await this.getPicturesOfEvent(event);
-  }
-
-  getCarpoolsOfEvent(event: EventModel): Promise<CarpoolModel[]> {
-    return this.carpoolService.getCarpoolsEvent(event.eventId)
-      .then(function(carpools) {
-        return carpools;
-      });
-  }
-
-  getPicturesOfEvent(event: EventModel): Promise<MediaModel[]> {
-    return this.zoneService.getPicturesZone(event.zone.zoneId)
-      .then(function(pictures) {
-        return pictures;
-      });
   }
 
 }
