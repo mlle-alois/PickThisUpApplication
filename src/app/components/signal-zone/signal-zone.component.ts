@@ -64,7 +64,7 @@ export class SignalZoneComponent implements OnInit {
     });
     this.isCreated = true;
     this.isSignalZoneClickedChange.emit(false);
-    this.messageService.add({severity: 'warn', summary: 'Signalé', detail: 'Lieu signalé avec succès ! Il doit maintenant être validé par notre équipe.'});
+    this.messageService.add({severity: 'success', summary: 'Signalé', detail: 'Lieu signalé avec succès ! Il doit maintenant être validé par notre équipe.'});
   }
 
   filterItems(event) {
