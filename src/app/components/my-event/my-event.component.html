@@ -11,8 +11,8 @@
     <p class="bold-text">{{event.zone.zoneStreet}} <br/>{{event.zone.zoneCity}} {{event.zone.zoneZipcode}}
     </p>
   </div>
-  <p style="font-size: 12px;">Du <span class="bold-text">{{event.dateHourStart.toStringDate()}}</span><br/>
-    Jusqu'au <span class="bold-text">{{event.dateHourEnd.toStringDate()}}</span></p>
+  <p style="font-size: 12px;">Du <span class="bold-text">{{event.dateHourStart.toFrenchDate()}}</span><br/>
+    Jusqu'au <span class="bold-text">{{event.dateHourEnd.toFrenchDate()}}</span></p>
   <div style="text-align: right" *ngIf="event.dateHourStart > currentTimestamp">
     <span class="bold-text">{{event.eventRemainingPlaces}}</span> places restantes
   </div>
@@ -37,7 +37,7 @@
         <h2>{{visibleEvent.eventTitle}}</h2>
         <p>{{visibleEvent.eventDescription}}</p>
         <p>Organisé par : <span class="bold-text">{{visibleEvent.creatorId}}</span></p>
-        <p style="font-size: 12px;">Créé le {{visibleEvent.dateHourCreation.toStringDate()}}</p>
+        <p style="font-size: 12px;">Créé le {{visibleEvent.dateHourCreation.toFrenchDate()}}</p>
         <div>
           <img src="assets/map-marker-alt-solid.svg" alt="" class="icon"/>
           <p class="bold-text">
@@ -47,8 +47,8 @@
           </p>
         </div>
         <p style="font-size: 12px;">Du <span
-          class="bold-text">{{visibleEvent.dateHourStart.toStringDate()}}</span><br/>
-          Jusqu'au <span class="bold-text">{{visibleEvent.dateHourStart.toStringDate()}}</span></p>
+          class="bold-text">{{visibleEvent.dateHourStart.toFrenchDate()}}</span><br/>
+          Jusqu'au <span class="bold-text">{{visibleEvent.dateHourStart.toFrenchDate()}}</span></p>
         <div style="text-align: right"
              *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleEvent.eventRemainingPlaces > 0">
           <span class="bold-text">{{visibleEvent.eventRemainingPlaces}}</span> places restantes
