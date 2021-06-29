@@ -23,7 +23,9 @@
         <p style="font-size: 12px;">Du <span class="bold-text">{{event.dateHourStart.toFrenchDate()}}</span><br/>
           Jusqu'au <span class="bold-text">{{event.dateHourEnd.toFrenchDate()}}</span></p>
         <div style="text-align: right" *ngIf="event.dateHourStart > currentTimestamp">
-          <span class="bold-text">{{event.eventRemainingPlaces}}</span> places restantes
+          <span class="bold-text">{{event.eventRemainingPlaces}}</span>
+          <span *ngIf="event.eventRemainingPlaces > 0"> places restantes</span>
+          <span *ngIf="event.eventRemainingPlaces === 0"> place restante</span>
         </div>
         <ng-template pTemplate="footer">
           <div *ngIf="currentUserParticipateToEvents">
@@ -74,7 +76,9 @@
           Jusqu'au <span class="bold-text">{{visibleEvent.dateHourStart.toFrenchDate()}}</span></p>
         <div style="text-align: right"
              *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleEvent.eventRemainingPlaces > 0">
-          <span class="bold-text">{{visibleEvent.eventRemainingPlaces}}</span> places restantes
+          <span class="bold-text">{{visibleEvent.eventRemainingPlaces}}</span>
+          <span *ngIf="visibleEvent.eventRemainingPlaces > 0"> places restantes</span>
+          <span *ngIf="visibleEvent.eventRemainingPlaces === 0"> place restante</span>
         </div>
 
         <h3>Participants</h3>
@@ -117,7 +121,9 @@
             <span
               class="bold-text">{{carpool.carpoolDepartureStreet}} {{carpool.carpoolDepartureZipcode}} {{carpool.carpoolDepartureCity}}</span>
             - Conducteur : <span class="bold-text">{{carpool.conductorId}}</span> - <span
-              class="bold-text">{{carpool.carpoolRemainingPlaces}}</span> places restantes
+              class="bold-text">{{carpool.carpoolRemainingPlaces}}</span>
+            <span *ngIf="carpool.carpoolRemainingPlaces > 0">places restantes</span>
+            <span *ngIf="carpool.carpoolRemainingPlaces === 0">place restante</span>
             <div style="float: right; margin-top: 5px;" *ngIf="currentUserParticipateToCarpools">
               <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
                         (click)="onCarpoolDetailClicked(carpool)"></p-button>
@@ -172,7 +178,9 @@
       {{visibleCarpool.conductorId}}, {{visibleCarpool.conductor.phoneNumber}}</span></p>
     <div style="text-align: right"
          *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleCarpool.carpoolRemainingPlaces > 0">
-      <span class="bold-text">{{visibleCarpool.carpoolRemainingPlaces}}</span> places restantes
+      <span class="bold-text">{{visibleCarpool.carpoolRemainingPlaces}}</span>
+      <span *ngIf="visibleCarpool.carpoolRemainingPlaces > 0"> places restantes</span>
+      <span *ngIf="visibleCarpool.carpoolRemainingPlaces === 0"> place restante</span>
     </div>
 
     <h3>Participants</h3>
@@ -219,7 +227,8 @@
 
       <fieldset class="form-group">
         <label>Adresse</label>
-        <input type="text" placeholder="Adresse" [(ngModel)]="carpoolStreet" class="form-control" formControlName="carpoolDepartureStreet" required>
+        <input type="text" placeholder="Adresse" [(ngModel)]="carpoolStreet" class="form-control"
+               formControlName="carpoolDepartureStreet" required>
         <span
           *ngIf="!registerForm.controls.carpoolDepartureStreet.valid && registerForm.controls.carpoolDepartureStreet.errors['required'] && registerForm.controls.carpoolDepartureStreet.touched"
           class="help-block">Adresse obligatoire</span>
@@ -227,7 +236,8 @@
 
       <fieldset class="form-group">
         <label>Code postal</label>
-        <input type="text" placeholder="Code postal" [(ngModel)]="carpoolZipcode" class="form-control" formControlName="carpoolDepartureZipcode"
+        <input type="text" placeholder="Code postal" [(ngModel)]="carpoolZipcode" class="form-control"
+               formControlName="carpoolDepartureZipcode"
                maxlength="5"
                required>
         <span
@@ -240,7 +250,8 @@
 
       <fieldset class="form-group">
         <label>Ville</label>
-        <input type="text" placeholder="Ville" [(ngModel)]="carpoolCity" class="form-control" formControlName="carpoolDepartureCity" required>
+        <input type="text" placeholder="Ville" [(ngModel)]="carpoolCity" class="form-control"
+               formControlName="carpoolDepartureCity" required>
         <span
           *ngIf="!registerForm.controls.carpoolDepartureCity.valid && registerForm.controls.carpoolDepartureCity.errors['required'] && registerForm.controls.carpoolDepartureCity.touched"
           class="help-block">Ville obligatoire</span>

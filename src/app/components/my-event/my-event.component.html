@@ -14,7 +14,9 @@
   <p style="font-size: 12px;">Du <span class="bold-text">{{event.dateHourStart.toFrenchDate()}}</span><br/>
     Jusqu'au <span class="bold-text">{{event.dateHourEnd.toFrenchDate()}}</span></p>
   <div style="text-align: right" *ngIf="event.dateHourStart > currentTimestamp">
-    <span class="bold-text">{{event.eventRemainingPlaces}}</span> places restantes
+    <span class="bold-text">{{event.eventRemainingPlaces}}</span>
+    <span *ngIf="event.eventRemainingPlaces > 0"> places restantes</span>
+    <span *ngIf="event.eventRemainingPlaces === 0"> place restante</span>
   </div>
   <ng-template pTemplate="footer">
     <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
@@ -51,7 +53,9 @@
           Jusqu'au <span class="bold-text">{{visibleEvent.dateHourStart.toFrenchDate()}}</span></p>
         <div style="text-align: right"
              *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleEvent.eventRemainingPlaces > 0">
-          <span class="bold-text">{{visibleEvent.eventRemainingPlaces}}</span> places restantes
+          <span class="bold-text">{{visibleEvent.eventRemainingPlaces}}</span>
+          <span *ngIf="visibleEvent.eventRemainingPlaces > 0"> places restantes</span>
+          <span *ngIf="visibleEvent.eventRemainingPlaces === 0"> place restante</span>
         </div>
 
         <h3>Participants</h3>
@@ -94,7 +98,9 @@
             <span
               class="bold-text">{{carpool.carpoolDepartureStreet}} {{carpool.carpoolDepartureZipcode}} {{carpool.carpoolDepartureCity}}</span>
             - Conducteur : <span class="bold-text">{{carpool.conductorId}}</span> - <span
-              class="bold-text">{{carpool.carpoolRemainingPlaces}}</span> places restantes
+              class="bold-text">{{carpool.carpoolRemainingPlaces}}</span>
+            <span *ngIf="carpool.carpoolRemainingPlaces > 0"> places restantes</span>
+            <span *ngIf="carpool.carpoolRemainingPlaces === 0"> place restante</span>
             <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
                       (click)="onCarpoolDetailClicked(carpool)"></p-button>
           </td>
@@ -130,7 +136,9 @@
       {{visibleCarpool.conductorId}}, {{visibleCarpool.conductor.phoneNumber}}</span></p>
     <div style="text-align: right"
          *ngIf="visibleEvent.dateHourStart > currentTimestamp && visibleCarpool.carpoolRemainingPlaces > 0">
-      <span class="bold-text">{{visibleCarpool.carpoolRemainingPlaces}}</span> places restantes
+      <span class="bold-text">{{visibleCarpool.carpoolRemainingPlaces}}</span>
+      <span *ngIf="visibleCarpool.carpoolRemainingPlaces > 0"> places restantes</span>
+      <span *ngIf="visibleCarpool.carpoolRemainingPlaces === 0"> place restante</span>
     </div>
 
     <h3>Participants</h3>
