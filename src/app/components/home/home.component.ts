@@ -162,7 +162,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.confirmationService.confirm({
       target: e.target,
       message: 'Voulez-vous proposer un covoiturage pour cet événement ?',
-      icon: 'pi pi-users',
+      icon: 'pi pi-check',
       accept: async () => {
         this.selectedEvent = event;
         if(this.oldAdresses.length === 0) {
@@ -204,7 +204,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.confirmationService.confirm({
       target: e.target,
       message: 'Voulez-vous vraiment vous désinscrire de l\'événement ?',
-      icon: 'pi pi-users',
+      icon: 'pi pi-times',
       accept: async () => {
         this.eventParticipants = await this.eventService.unregisterToEvent(event.eventId);
         this.events = await this.eventService.getAvailableEvents();
@@ -237,7 +237,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.confirmationService.confirm({
       target: e.target,
       message: 'Voulez-vous vraiment vous désinscrire du covoiturage ?',
-      icon: 'pi pi-users',
+      icon: 'pi pi-times',
       accept: async () => {
         await this.unsubscribeToCarpool(carpool);
         this.messageService.add({severity: 'success', summary: 'Désinscrit', detail: 'Désinscription effectuée'});

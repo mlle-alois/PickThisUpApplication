@@ -87,7 +87,7 @@ export class MyEventComponent implements OnInit {
     this.confirmationService.confirm({
       target: e.target,
       message: 'Voulez-vous vraiment supprimer cet événement ?',
-      icon: 'pi pi-users',
+      icon: 'pi pi-trash',
       accept: async () => {
         await this.eventService.deleteEvent(event.eventId);
         this.messageService.add({severity: 'success', summary: 'Supprimé', detail: 'Suppression effectuée'});

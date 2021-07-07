@@ -104,7 +104,7 @@ export class MyZonesComponent implements OnInit, AfterViewInit {
     this.confirmationService.confirm({
       target: e.target,
       message: 'Voulez-vous vraiment supprimer cette zone ?',
-      icon: 'pi pi-users',
+      icon: 'pi pi-trash',
       accept: async () => {
         await this.zoneService.deleteZone(zone.zoneId);
         this.messageService.add({severity: 'success', summary: 'Supprimé', detail: 'Suppression effectuée'});
