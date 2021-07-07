@@ -106,16 +106,16 @@
           </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="footer">
-        <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary"
-                  *ngIf="visibleEvent.statusId === 5"
-                  (click)="onEventUpdateClicked(visibleEvent)"></p-button>
-        <p-button label="Supprimer" icon="pi pi-trash" styleClass="p-button-danger"
-                  *ngIf="event.statusId === 5 && event.creatorId === currentUser.mail"
-                  (click)="onEventDeleteClicked(event, $event)"></p-button>
-      </ng-template>
     </p-table>
   </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Modifier" icon="pi pi-pencil" styleClass="p-button-secondary"
+              *ngIf="visibleEvent.statusId === 5"
+              (click)="onEventUpdateClicked(visibleEvent)"></p-button>
+    <p-button label="Supprimer" icon="pi pi-trash" styleClass="p-button-danger"
+              *ngIf="event.statusId === 5 && event.creatorId === currentUser.mail"
+              (click)="onEventDeleteClicked(event, $event)"></p-button>
+  </ng-template>
 </p-dialog>
 <!-- endregion-->
 
