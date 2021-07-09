@@ -32,7 +32,7 @@
             <p-button label="Détails" icon="pi pi-plus" styleClass="p-button-warning"
                       (click)="onEventDetailClicked(event)"></p-button>
             <p-button
-              *ngIf="event.dateHourEnd > currentTimestamp && event.eventRemainingPlaces > 0 &&
+              *ngIf="event.dateHourStart > currentTimestamp && event.eventRemainingPlaces > 0 &&
               !currentUserParticipateToEvents.get(event.eventId) && currentUser.mail !== event.creatorId"
               label="Participer" (onClick)="proposeCarpool(event, $event)"
               icon="pi pi-check" styleClass="p-button-success"
