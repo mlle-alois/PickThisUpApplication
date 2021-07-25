@@ -60,7 +60,6 @@ export class SignalZoneComponent implements OnInit {
     const zone = await this.zoneService.signalZone(this.registerForm.value);
     this.uploadedFiles.forEach(async (file) => {
       await this.zoneService.addPictureToZone(zone.zoneId, file.name);
-      //TODO mettre les fichiers uploadés dans assets
     });
     this.isCreated = true;
     this.isSignalZoneClickedChange.emit(false);

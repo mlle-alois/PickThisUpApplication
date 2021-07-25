@@ -210,7 +210,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
         this.events = await this.eventService.getAvailableEvents();
         this.currentUserParticipateToEvents = await this.setCurrentUserParticipateToEvents(this.events);
         await this.unsubscribeUserToEventCarpools(event);
-        //TODO désinscrire de tous les covoiturages de l'événement
         this.visibleEvent = this.events.find(event => event.eventId === event.eventId);
         this.messageService.add({severity: 'success', summary: 'Désinscrit', detail: 'Désinscription effectuée'});
       }
@@ -253,7 +252,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.currentUserParticipateToCarpool = false;
   }
 
-  //TODO vérifier que c'est faisable avec des fonctions de js
   async setCurrentUserParticipateToEvents(events: EventModel[]): Promise<Map<number, boolean>> {
     const currentUserParticipateToEvent = new Map();
     for (let i = 0; i < events.length; i += 1) {
@@ -273,7 +271,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
     return currentUserParticipateToEvent;
   }
 
-  //TODO vérifier que c'est faisable avec des fonctions de js
   async setCurrentUserParticipateToCarpools(carpools: CarpoolModel[]): Promise<Map<number, boolean>> {
     const currentUserParticipateToCarpools = new Map();
     for (let i = 0; i < carpools.length; i += 1) {

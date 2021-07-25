@@ -68,7 +68,6 @@ export class UpdateEventComponent implements OnInit {
     this.registerForm.patchValue({dateHourStart: this.visibleEvent.dateHourStart});
     this.registerForm.patchValue({dateHourEnd: this.visibleEvent.dateHourEnd});
     this.registerForm.patchValue({eventMaxNbPlaces: this.visibleEvent.eventMaxNbPlaces});
-    //TODO faire marcher la selection par défaut de l'image de l'événement
     this.isLoadedData = true;
   }
 
